@@ -12,7 +12,7 @@ status: "Verified"
 > [!abstract] The Stitch
 > This narrative originates from the phrase **"There was once"** extracted from [[SS-0003]]
 
-Onwards dear ones, the very verdict of our futures relies on the passage of this here and now.
+Onwards dear ones, the very verdict of our futures relies on the passage of this here and now. This story is stitched to [[SS-0003]].
 
 ---
 
