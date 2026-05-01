@@ -1,3 +1,316 @@
 @use "./base.scss";
 
-// put your custom CSS here!
+// ════════════════════════════════════════════════════════════
+//  STITCHED STORIES — PRESENTATION LAYER
+// ════════════════════════════════════════════════════════════
+
+// ── Full-width page container ────────────────────────────────
+.page {
+  max-width: 100vw !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+// ── Bisected grid: left content half / right graph half ──────
+.page > #quartz-body {
+  display: grid !important;
+  max-width: 100vw !important;
+  min-height: 100vh;
+  grid-template-columns: 1fr 50vw !important;
+  grid-template-rows: auto 1fr auto !important;
+  column-gap: 0 !important;
+  row-gap: 0 !important;
+  grid-template-areas:
+    "grid-header    grid-sidebar-right"
+    "grid-center    grid-sidebar-right"
+    "grid-footer    grid-sidebar-right" !important;
+
+  // No left sidebar
+  & .sidebar.left {
+    display: none !important;
+  }
+
+  // Page header sits above the article in the left column
+  & .page-header {
+    margin: 2.5rem 0 0 0 !important;
+    padding: 0 3.5rem !important;
+    border-bottom: 1px solid var(--lightgray);
+    padding-bottom: 1rem !important;
+  }
+
+  // Article content
+  & .center {
+    padding: 2rem 3.5rem 2rem !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-y: auto;
+  }
+
+  // Footer in left column
+  & footer {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 1rem 3.5rem !important;
+    border-top: 1px solid var(--lightgray);
+  }
+
+  // Right panel — full-height persistent graph
+  & .sidebar.right {
+    height: 100vh !important;
+    position: sticky !important;
+    top: 0 !important;
+    padding: 0 !important;
+    flex-direction: column !important;
+    border-left: 1px solid var(--lightgray);
+    overflow: hidden;
+    background-color: var(--light);
+    display: flex !important;
+  }
+}
+
+// ── Graph controls bar ───────────────────────────────────────
+.graph-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  background-color: var(--light);
+  border-bottom: 1px solid var(--lightgray);
+  flex-shrink: 0;
+  height: 46px;
+  box-sizing: border-box;
+}
+
+.graph-btn {
+  background: none;
+  border: 1px solid var(--lightgray);
+  color: var(--darkgray);
+  font-family: var(--headerFont), serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.28rem 0.7rem;
+  border-radius: 2px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    border-color: var(--secondary);
+    color: var(--secondary);
+  }
+
+  &:active {
+    color: var(--tertiary);
+    border-color: var(--tertiary);
+  }
+}
+
+.graph-search-input {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: 1px solid var(--lightgray);
+  color: var(--darkgray);
+  font-family: var(--bodyFont), serif;
+  font-size: 0.7rem;
+  padding: 0.28rem 0.65rem;
+  border-radius: 2px;
+  outline: none;
+
+  &::placeholder {
+    color: var(--gray);
+    opacity: 0.6;
+  }
+
+  &:focus {
+    border-color: var(--tertiary);
+  }
+}
+
+// ── Site title ───────────────────────────────────────────────
+.page-title {
+  font-family: var(--titleFont) !important;
+  font-size: 1.1rem !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase;
+  margin: 0 0 0.5rem !important;
+
+  a {
+    color: var(--dark) !important;
+    font-weight: 400 !important;
+    background: none !important;
+    padding: 0 !important;
+
+    &:hover {
+      color: var(--secondary) !important;
+    }
+  }
+}
+
+// ── Article title ────────────────────────────────────────────
+.article-title {
+  font-family: var(--headerFont), serif !important;
+  font-size: 1.9rem !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase;
+  color: var(--dark) !important;
+  margin-bottom: 0.4rem !important;
+}
+
+// ── Body typography ──────────────────────────────────────────
+article {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--headerFont), serif !important;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--dark) !important;
+  }
+
+  p,
+  li,
+  td,
+  blockquote {
+    font-family: var(--bodyFont), serif !important;
+    line-height: 1.8;
+    color: var(--darkgray) !important;
+  }
+
+  // Internal links — crimson, no background bubble
+  a.internal {
+    background-color: transparent !important;
+    color: var(--secondary) !important;
+    border-bottom: 1px dotted var(--secondary);
+    padding: 0 !important;
+    border-radius: 0 !important;
+    font-weight: 400;
+    line-height: inherit;
+
+    &:hover {
+      color: var(--tertiary) !important;
+      border-bottom-color: var(--tertiary);
+    }
+  }
+
+  a.external {
+    color: var(--secondary) !important;
+    font-weight: 400;
+  }
+
+  blockquote {
+    border-left-color: var(--secondary) !important;
+    background-color: rgba(139, 26, 26, 0.04);
+  }
+}
+
+// ── Stitch phrase ─────────────────────────────────────────────
+.stitch-phrase {
+  color: var(--secondary) !important;
+  text-decoration: none !important;
+  border-bottom: 2px dotted var(--secondary) !important;
+  background: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  font-style: italic;
+  font-weight: 400;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--tertiary) !important;
+    border-bottom-color: var(--tertiary) !important;
+  }
+}
+
+// ── Callout blocks ────────────────────────────────────────────
+.callout {
+  background-color: rgba(139, 26, 26, 0.05) !important;
+
+  &[data-callout] {
+    border-color: var(--secondary) !important;
+  }
+
+  .callout-title {
+    color: var(--secondary) !important;
+    font-family: var(--headerFont), serif !important;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+  }
+}
+
+// ── Content meta (date, reading time, etc.) ──────────────────
+.content-meta {
+  color: var(--gray) !important;
+  font-size: 0.7rem !important;
+  font-family: var(--headerFont), serif !important;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 1.5rem !important;
+}
+
+// ── Tag list ─────────────────────────────────────────────────
+.tags {
+  margin-bottom: 1rem !important;
+
+  li > a {
+    background-color: rgba(139, 26, 26, 0.1) !important;
+    color: var(--secondary) !important;
+    border: 1px solid var(--secondary) !important;
+    font-family: var(--headerFont), serif !important;
+    font-size: 0.65rem !important;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+
+    &:hover {
+      background-color: rgba(139, 26, 26, 0.2) !important;
+    }
+  }
+}
+
+// ── Footer ────────────────────────────────────────────────────
+footer p {
+  font-family: var(--headerFont), serif !important;
+  font-size: 0.6rem !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: var(--gray) !important;
+  opacity: 0.5;
+  margin: 0 !important;
+}
+
+// ── Backlinks (hidden — graph replaces them) ─────────────────
+.backlinks {
+  display: none !important;
+}
+
+// ── Text selection ───────────────────────────────────────────
+::selection {
+  background: rgba(139, 26, 26, 0.35);
+  color: var(--darkgray);
+}
+
+// ── Scrollbar (Webkit) ───────────────────────────────────────
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--light);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--lightgray);
+  border-radius: 2px;
+
+  &:hover {
+    background: var(--gray);
+  }
+}

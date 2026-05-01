@@ -68,6 +68,13 @@ type TweenNode = {
   stop: () => void
 }
 
+// ── Module-level state shared with controls ──────────────────
+let searchQuery = ""
+let renderPixiFromD3Fn: (() => void) | null = null
+let graphNodes: NodeData[] = []
+let graphLinks: LinkData[] = []
+let currentFullSlugGlobal: FullSlug | null = null
+
 async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const slug = simplifySlug(fullSlug)
   const visited = getVisited()
@@ -126,7 +133,6 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const wl: (SimpleSlug | "__SENTINEL")[] = [slug, "__SENTINEL"]
   if (depth >= 0) {
     while (depth >= 0 && wl.length > 0) {
-      // compute neighbours
       const cur = wl.shift()!
       if (cur === "__SENTINEL") {
         depth--
@@ -164,7 +170,6 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const width = graph.offsetWidth
   const height = Math.max(graph.offsetHeight, 250)
 
-  // we virtualize the simulation and use pixi to actually render it
   const simulation: Simulation<NodeData, LinkData> = forceSimulation<NodeData>(graphData.nodes)
     .force("charge", forceManyBody().strength(-100 * repelForce))
     .force("center", forceCenter().strength(centerForce))
@@ -174,7 +179,6 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const radius = (Math.min(width, height) / 2) * 0.8
   if (enableRadial) simulation.force("radial", forceRadial(radius).strength(0.2))
 
-  // precompute style prop strings as pixi doesn't support css variables
   const cssVars = [
     "--secondary",
     "--tertiary",
@@ -193,7 +197,6 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     {} as Record<(typeof cssVars)[number], string>,
   )
 
-  // calculate color
   const color = (d: NodeData) => {
     const isCurrent = d.id === slug
     if (isCurrent) {
@@ -256,10 +259,18 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     for (const l of linkRenderData) {
       let alpha = 1
 
-      // if we are hovering over a node, we want to highlight the immediate neighbours
-      // with full alpha and the rest with default alpha
+      // Search filter: fade out edges not connected to a matching node
+      if (searchQuery) {
+        const srcMatches =
+          l.simulationData.source.text.toLowerCase().includes(searchQuery) ||
+          l.simulationData.target.text.toLowerCase().includes(searchQuery) ||
+          l.simulationData.source.id.toLowerCase().includes(searchQuery) ||
+          l.simulationData.target.id.toLowerCase().includes(searchQuery)
+        if (!srcMatches) alpha = 0.03
+      }
+
       if (hoveredNodeId) {
-        alpha = l.active ? 1 : 0.2
+        alpha = l.active ? alpha : Math.min(alpha, 0.2)
       }
 
       l.color = l.active ? computedStyleMap["--gray"] : computedStyleMap["--lightgray"]
@@ -323,9 +334,17 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     for (const n of nodeRenderData) {
       let alpha = 1
 
-      // if we are hovering over a node, we want to highlight the immediate neighbours
+      // Search filter: fade out non-matching nodes
+      if (searchQuery) {
+        const matches =
+          n.simulationData.text.toLowerCase().includes(searchQuery) ||
+          n.simulationData.id.toLowerCase().includes(searchQuery)
+        if (!matches) alpha = 0.08
+      }
+
+      // Hover filter (preserve search dimming when hovering)
       if (hoveredNodeId !== null && focusOnHover) {
-        alpha = n.active ? 1 : 0.2
+        alpha = n.active ? alpha : Math.min(alpha, 0.2)
       }
 
       tweenGroup.add(new Tweened<Graphics>(n.gfx, tweenGroup).to({ alpha }, 200))
@@ -479,7 +498,6 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
           event.subject.fy = null
           dragging = false
 
-          // if the time between mousedown and mouseup is short, we consider it a click
           if (Date.now() - dragStartTime < 500) {
             const node = graphData.nodes.find((n) => n.id === event.subject.id) as NodeData
             const targ = resolveRelative(fullSlug, node.id)
@@ -509,7 +527,6 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
           stage.scale.set(transform.k, transform.k)
           stage.position.set(transform.x, transform.y)
 
-          // zoom adjusts opacity of labels too
           const scale = transform.k * opacityScale
           let scaleOpacity = Math.max((scale - 1) / 3.75, 0)
           const activeNodes = nodeRenderData.filter((n) => n.active).flatMap((n) => n.label)
@@ -550,9 +567,19 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   }
 
   requestAnimationFrame(animate)
+
+  // Expose state for controls
+  graphNodes = graphData.nodes
+  graphLinks = graphData.links as unknown as LinkData[]
+  currentFullSlugGlobal = fullSlug
+  renderPixiFromD3Fn = renderPixiFromD3
+
   return () => {
     stopAnimation = true
     app.destroy()
+    if (renderPixiFromD3Fn === renderPixiFromD3) {
+      renderPixiFromD3Fn = null
+    }
   }
 }
 
@@ -564,6 +591,7 @@ function cleanupLocalGraphs() {
     cleanup()
   }
   localGraphCleanups = []
+  renderPixiFromD3Fn = null
 }
 
 function cleanupGlobalGraphs() {
@@ -573,16 +601,66 @@ function cleanupGlobalGraphs() {
   globalGraphCleanups = []
 }
 
+function setupControls() {
+  const randomBtn = document.getElementById("graph-btn-randomise")
+  const hemBtn = document.getElementById("graph-btn-hem")
+  const searchInput = document.getElementById("graph-search-input") as HTMLInputElement | null
+
+  // Clear search input on each navigation
+  if (searchInput) searchInput.value = ""
+
+  if (randomBtn) {
+    const handler = () => {
+      if (!graphNodes.length || !currentFullSlugGlobal) return
+      const pickable = graphNodes.filter((n) => !n.id.startsWith("tags/"))
+      if (!pickable.length) return
+      const node = pickable[Math.floor(Math.random() * pickable.length)]
+      const targ = resolveRelative(currentFullSlugGlobal, node.id)
+      window.spaNavigate(new URL(targ, window.location.toString()))
+    }
+    randomBtn.addEventListener("click", handler)
+    window.addCleanup(() => randomBtn.removeEventListener("click", handler))
+  }
+
+  if (hemBtn) {
+    const handler = () => {
+      if (!graphLinks.length || !currentFullSlugGlobal) return
+      const curSlug = simplifySlug(currentFullSlugGlobal)
+      const neighbors = graphLinks
+        .filter((l) => l.source.id === curSlug || l.target.id === curSlug)
+        .map((l) => (l.source.id === curSlug ? l.target : l.source))
+        .filter((n) => n.id !== curSlug && !n.id.startsWith("tags/"))
+      if (!neighbors.length) return
+      const next = neighbors[Math.floor(Math.random() * neighbors.length)]
+      const targ = resolveRelative(currentFullSlugGlobal, next.id)
+      window.spaNavigate(new URL(targ, window.location.toString()))
+    }
+    hemBtn.addEventListener("click", handler)
+    window.addCleanup(() => hemBtn.removeEventListener("click", handler))
+  }
+
+  if (searchInput) {
+    const handler = () => {
+      searchQuery = searchInput.value.toLowerCase().trim()
+      renderPixiFromD3Fn?.()
+    }
+    searchInput.addEventListener("input", handler)
+    window.addCleanup(() => searchInput.removeEventListener("input", handler))
+  }
+}
+
 document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
   const slug = e.detail.url
   addToVisited(simplifySlug(slug))
 
   async function renderLocalGraph() {
+    searchQuery = ""
     cleanupLocalGraphs()
     const localGraphContainers = document.getElementsByClassName("graph-container")
     for (const container of localGraphContainers) {
       localGraphCleanups.push(await renderGraph(container as HTMLElement, slug))
     }
+    setupControls()
   }
 
   await renderLocalGraph()
@@ -595,54 +673,7 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
     document.removeEventListener("themechange", handleThemeChange)
   })
 
-  const containers = [...document.getElementsByClassName("global-graph-outer")] as HTMLElement[]
-  async function renderGlobalGraph() {
-    const slug = getFullSlug(window)
-    for (const container of containers) {
-      container.classList.add("active")
-      const sidebar = container.closest(".sidebar") as HTMLElement
-      if (sidebar) {
-        sidebar.style.zIndex = "1"
-      }
-
-      const graphContainer = container.querySelector(".global-graph-container") as HTMLElement
-      registerEscapeHandler(container, hideGlobalGraph)
-      if (graphContainer) {
-        globalGraphCleanups.push(await renderGraph(graphContainer, slug))
-      }
-    }
-  }
-
-  function hideGlobalGraph() {
-    cleanupGlobalGraphs()
-    for (const container of containers) {
-      container.classList.remove("active")
-      const sidebar = container.closest(".sidebar") as HTMLElement
-      if (sidebar) {
-        sidebar.style.zIndex = ""
-      }
-    }
-  }
-
-  async function shortcutHandler(e: HTMLElementEventMap["keydown"]) {
-    if (e.key === "g" && (e.ctrlKey || e.metaKey) && !e.shiftKey) {
-      e.preventDefault()
-      const anyGlobalGraphOpen = containers.some((container) =>
-        container.classList.contains("active"),
-      )
-      anyGlobalGraphOpen ? hideGlobalGraph() : renderGlobalGraph()
-    }
-  }
-
-  const containerIcons = document.getElementsByClassName("global-graph-icon")
-  Array.from(containerIcons).forEach((icon) => {
-    icon.addEventListener("click", renderGlobalGraph)
-    window.addCleanup(() => icon.removeEventListener("click", renderGlobalGraph))
-  })
-
-  document.addEventListener("keydown", shortcutHandler)
   window.addCleanup(() => {
-    document.removeEventListener("keydown", shortcutHandler)
     cleanupLocalGraphs()
     cleanupGlobalGraphs()
   })
