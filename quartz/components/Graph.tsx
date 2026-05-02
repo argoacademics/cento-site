@@ -65,18 +65,46 @@ export default ((opts?: Partial<GraphOptions>) => {
     return (
       <div class={classNames(displayClass, "graph")}>
         <div class="graph-controls">
-          <button class="graph-btn" id="graph-btn-randomise">
-            Randomise
-          </button>
-          <button class="graph-btn" id="graph-btn-hem">
-            Follow the hem
-          </button>
-          <input
-            class="graph-search-input"
-            id="graph-search-input"
-            type="text"
-            placeholder="Search nodes…"
-          />
+          <div class="graph-controls-row">
+            <button class="graph-btn" id="graph-btn-randomise">
+              Randomise
+            </button>
+            <button
+              class="graph-btn graph-btn-arrow"
+              id="graph-btn-hem-back"
+              title="Back along the hem"
+              disabled
+            >
+              ←
+            </button>
+            <button
+              class="graph-btn graph-btn-arrow"
+              id="graph-btn-hem-fwd"
+              title="Follow the hem"
+            >
+              →
+            </button>
+            <input
+              class="graph-search-input"
+              id="graph-search-input"
+              type="text"
+              placeholder="Search…"
+            />
+          </div>
+          <div class="graph-controls-row graph-filter-row">
+            <button class="graph-filter-btn active" data-filter="title">
+              Title
+            </button>
+            <button class="graph-filter-btn" data-filter="tags">
+              Tags
+            </button>
+            <button class="graph-filter-btn" data-filter="stitch">
+              Stitch
+            </button>
+            <button class="graph-filter-btn" data-filter="author">
+              Author
+            </button>
+          </div>
         </div>
         <div class="graph-outer">
           <div class="graph-container" data-cfg={JSON.stringify(localGraph)}></div>

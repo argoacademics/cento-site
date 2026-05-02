@@ -70,10 +70,34 @@ type TweenNode = {
 
 // ── Module-level state shared with controls ──────────────────
 let searchQuery = ""
+let activeFilter: "title" | "tags" | "stitch" | "author" = "title"
+let contentData: Map<SimpleSlug, ContentDetails> | null = null
+let hemHistory: SimpleSlug[] = []
 let renderPixiFromD3Fn: (() => void) | null = null
 let graphNodes: NodeData[] = []
 let graphLinks: LinkData[] = []
 let currentFullSlugGlobal: FullSlug | null = null
+
+function nodeMatchesFilter(node: NodeData): boolean {
+  if (!searchQuery) return true
+  const details = contentData?.get(node.id)
+  switch (activeFilter) {
+    case "title":
+      return details
+        ? details.title.toLowerCase().includes(searchQuery)
+        : node.text.toLowerCase().includes(searchQuery)
+    case "tags":
+      return details ? details.tags.some((t) => t.toLowerCase().includes(searchQuery)) : false
+    case "stitch":
+    case "author":
+      return details ? (details.content ?? "").toLowerCase().includes(searchQuery) : false
+    default:
+      return (
+        node.text.toLowerCase().includes(searchQuery) ||
+        node.id.toLowerCase().includes(searchQuery)
+      )
+  }
+}
 
 async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const slug = simplifySlug(fullSlug)
@@ -262,10 +286,8 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       // Search filter: fade out edges not connected to a matching node
       if (searchQuery) {
         const srcMatches =
-          l.simulationData.source.text.toLowerCase().includes(searchQuery) ||
-          l.simulationData.target.text.toLowerCase().includes(searchQuery) ||
-          l.simulationData.source.id.toLowerCase().includes(searchQuery) ||
-          l.simulationData.target.id.toLowerCase().includes(searchQuery)
+          nodeMatchesFilter(l.simulationData.source) ||
+          nodeMatchesFilter(l.simulationData.target)
         if (!srcMatches) alpha = 0.03
       }
 
@@ -336,10 +358,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
 
       // Search filter: fade out non-matching nodes
       if (searchQuery) {
-        const matches =
-          n.simulationData.text.toLowerCase().includes(searchQuery) ||
-          n.simulationData.id.toLowerCase().includes(searchQuery)
-        if (!matches) alpha = 0.08
+        if (!nodeMatchesFilter(n.simulationData)) alpha = 0.08
       }
 
       // Hover filter (preserve search dimming when hovering)
@@ -572,6 +591,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   graphNodes = graphData.nodes
   graphLinks = graphData.links as unknown as LinkData[]
   currentFullSlugGlobal = fullSlug
+  contentData = data
   renderPixiFromD3Fn = renderPixiFromD3
 
   return () => {
@@ -603,12 +623,16 @@ function cleanupGlobalGraphs() {
 
 function setupControls() {
   const randomBtn = document.getElementById("graph-btn-randomise")
-  const hemBtn = document.getElementById("graph-btn-hem")
+  const hemBackBtn = document.getElementById("graph-btn-hem-back") as HTMLButtonElement | null
+  const hemFwdBtn = document.getElementById("graph-btn-hem-fwd") as HTMLButtonElement | null
   const searchInput = document.getElementById("graph-search-input") as HTMLInputElement | null
+  const filterBtns = document.querySelectorAll<HTMLButtonElement>(".graph-filter-btn")
 
-  // Clear search input on each navigation
+  // Clear search on each navigation
   if (searchInput) searchInput.value = ""
+  searchQuery = ""
 
+  // Randomise
   if (randomBtn) {
     const handler = () => {
       if (!graphNodes.length || !currentFullSlugGlobal) return
@@ -622,7 +646,26 @@ function setupControls() {
     window.addCleanup(() => randomBtn.removeEventListener("click", handler))
   }
 
-  if (hemBtn) {
+  // Hem Back — navigate to previously visited node via hem
+  if (hemBackBtn) {
+    if (hemHistory.length === 0) {
+      hemBackBtn.setAttribute("disabled", "")
+    } else {
+      hemBackBtn.removeAttribute("disabled")
+    }
+    const handler = () => {
+      if (!hemHistory.length || !currentFullSlugGlobal) return
+      const prev = hemHistory.pop()!
+      if (hemBackBtn) hemBackBtn.toggleAttribute("disabled", hemHistory.length === 0)
+      const targ = resolveRelative(currentFullSlugGlobal, prev)
+      window.spaNavigate(new URL(targ, window.location.toString()))
+    }
+    hemBackBtn.addEventListener("click", handler)
+    window.addCleanup(() => hemBackBtn.removeEventListener("click", handler))
+  }
+
+  // Hem Forward — push current to history and navigate to random neighbor
+  if (hemFwdBtn) {
     const handler = () => {
       if (!graphLinks.length || !currentFullSlugGlobal) return
       const curSlug = simplifySlug(currentFullSlugGlobal)
@@ -631,14 +674,29 @@ function setupControls() {
         .map((l) => (l.source.id === curSlug ? l.target : l.source))
         .filter((n) => n.id !== curSlug && !n.id.startsWith("tags/"))
       if (!neighbors.length) return
+      hemHistory.push(curSlug)
       const next = neighbors[Math.floor(Math.random() * neighbors.length)]
       const targ = resolveRelative(currentFullSlugGlobal, next.id)
       window.spaNavigate(new URL(targ, window.location.toString()))
     }
-    hemBtn.addEventListener("click", handler)
-    window.addCleanup(() => hemBtn.removeEventListener("click", handler))
+    hemFwdBtn.addEventListener("click", handler)
+    window.addCleanup(() => hemFwdBtn.removeEventListener("click", handler))
   }
 
+  // Filter buttons
+  filterBtns.forEach((btn) => {
+    const filter = btn.dataset.filter as typeof activeFilter
+    btn.classList.toggle("active", filter === activeFilter)
+    const handler = () => {
+      activeFilter = filter
+      filterBtns.forEach((b) => b.classList.toggle("active", b.dataset.filter === activeFilter))
+      renderPixiFromD3Fn?.()
+    }
+    btn.addEventListener("click", handler)
+    window.addCleanup(() => btn.removeEventListener("click", handler))
+  })
+
+  // Search input
   if (searchInput) {
     const handler = () => {
       searchQuery = searchInput.value.toLowerCase().trim()

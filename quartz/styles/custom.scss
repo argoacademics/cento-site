@@ -71,14 +71,25 @@
 // ── Graph controls bar ───────────────────────────────────────
 .graph-controls {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.55rem 0.75rem;
+  flex-direction: column;
   background-color: var(--light);
   border-bottom: 1px solid var(--lightgray);
   flex-shrink: 0;
-  height: 46px;
+}
+
+.graph-controls-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  height: 44px;
   box-sizing: border-box;
+}
+
+.graph-filter-row {
+  height: 36px;
+  border-top: 1px solid var(--lightgray);
+  padding: 0.3rem 0.75rem;
 }
 
 .graph-btn {
@@ -104,6 +115,43 @@
     color: var(--tertiary);
     border-color: var(--tertiary);
   }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: default;
+    pointer-events: none;
+  }
+}
+
+.graph-btn-arrow {
+  padding: 0.28rem 0.55rem;
+  font-size: 0.85rem;
+  letter-spacing: 0;
+}
+
+.graph-filter-btn {
+  background: none;
+  border: 1px solid var(--lightgray);
+  color: var(--gray);
+  font-family: var(--headerFont), serif;
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.5rem;
+  border-radius: 2px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.2s ease, color 0.2s ease;
+
+  &.active {
+    border-color: var(--secondary);
+    color: var(--secondary);
+  }
+
+  &:hover {
+    border-color: var(--tertiary);
+    color: var(--tertiary);
+  }
 }
 
 .graph-search-input {
@@ -125,6 +173,27 @@
 
   &:focus {
     border-color: var(--tertiary);
+  }
+}
+
+// ── Home button masthead ─────────────────────────────────────
+.home-button {
+  margin: 0 0 0.4rem;
+}
+
+.home-button-link {
+  font-family: var(--titleFont), serif !important;
+  font-size: 1.1rem !important;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--secondary) !important;
+  text-decoration: none !important;
+  font-weight: 400;
+  background: none !important;
+  padding: 0 !important;
+
+  &:hover {
+    color: var(--tertiary) !important;
   }
 }
 
@@ -284,6 +353,115 @@ footer p {
   color: var(--gray) !important;
   opacity: 0.5;
   margin: 0 !important;
+}
+
+// ── Story navigation bar ─────────────────────────────────────
+.story-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem 3.5rem;
+  border-top: 1px solid var(--lightgray);
+  flex-wrap: wrap;
+
+  .story-nav-btn {
+    font-family: var(--headerFont), serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--secondary);
+    text-decoration: none !important;
+    border: 1px solid var(--lightgray);
+    padding: 0.28rem 0.8rem;
+    border-radius: 2px;
+    transition: border-color 0.2s ease, color 0.2s ease;
+
+    &:hover {
+      border-color: var(--secondary);
+      color: var(--tertiary) !important;
+    }
+  }
+
+  .story-nav-source {
+    margin: 0 auto;
+  }
+
+  .story-nav-disabled {
+    color: var(--gray) !important;
+    opacity: 0.3;
+    cursor: default;
+  }
+}
+
+// ── Onboarding overlay ────────────────────────────────────────
+.ss-onboarding-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 50vw;
+  bottom: 0;
+  left: 0;
+  background-color: var(--light);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid var(--lightgray);
+
+  &.ss-onboarding-visible {
+    display: flex;
+  }
+}
+
+.ss-onboarding-inner {
+  max-width: 380px;
+  padding: 3rem;
+  text-align: center;
+}
+
+.ss-onboarding-kicker {
+  font-family: var(--headerFont), serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  margin: 0 0 0.75rem;
+}
+
+.ss-onboarding-title {
+  font-family: var(--titleFont), serif;
+  font-size: 2.4rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dark);
+  font-weight: 400;
+  margin: 0 0 1.25rem;
+}
+
+.ss-onboarding-body {
+  font-family: var(--bodyFont), serif;
+  font-size: 0.95rem;
+  color: var(--darkgray);
+  line-height: 1.85;
+  margin: 0 0 2rem;
+}
+
+.ss-onboarding-btn {
+  font-family: var(--headerFont), serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dark);
+  background: none;
+  border: 1px solid var(--lightgray);
+  padding: 0.6rem 2rem;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    border-color: var(--secondary);
+    color: var(--secondary);
+  }
 }
 
 // ── Backlinks (hidden — graph replaces them) ─────────────────
