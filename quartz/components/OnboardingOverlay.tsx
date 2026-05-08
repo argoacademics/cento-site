@@ -52,7 +52,7 @@ const OnboardingOverlay: QuartzComponent = () => {
         </div>
 
         <div class="ss-onboarding-cta">
-          <a id="ss-onboarding-enter" href="/SS-0003/SS-0003" class="ss-onboarding-btn" role="button">
+          <a id="ss-onboarding-enter" href="/" class="ss-onboarding-btn" role="button">
             <span class="ss-btn-text">Trace the thread</span>
             <span class="ss-btn-arrow" aria-hidden="true">→</span>
           </a>
