@@ -5,17 +5,14 @@ const OnboardingOverlay: QuartzComponent = () => {
     <div id="ss-onboarding-overlay" class="ss-onboarding-overlay" aria-hidden="true" aria-modal="true" role="dialog">
       <div class="ss-onboarding-stage">
 
-        {/* Threaded rule — animates in first */}
         <div class="ss-onboarding-rule" aria-hidden="true">
           <span class="ss-rule-line ss-rule-line--left" />
           <span class="ss-rule-diamond" />
           <span class="ss-rule-line ss-rule-line--right" />
         </div>
 
-        {/* Kicker */}
         <p class="ss-onboarding-kicker">A literary archive</p>
 
-        {/* Title — letters stagger in */}
         <h1 class="ss-onboarding-title" aria-label="Stitched Stories">
           <span class="ss-title-word" aria-hidden="true">
             {"Stitched".split("").map((ch, i) => (
@@ -30,20 +27,30 @@ const OnboardingOverlay: QuartzComponent = () => {
           </span>
         </h1>
 
-        {/* Body copy — three lines, each fading in */}
         <div class="ss-onboarding-body">
           <p class="ss-body-line" style="--li:0">
-            Every story is threaded to its source.
+            Every story begins somewhere — in a margin note, a misheard phrase,
+            the slant of afternoon light through a window someone once described.
           </p>
           <p class="ss-body-line" style="--li:1">
-            A phrase migrates. A line resurfaces in another hand.
+            Literature does not end on the page where it was printed.
+            It migrates. It settles into other mouths, other memories,
+            other hands that reach for a pen because something they read
+            years ago has finally surfaced as something they need to say.
           </p>
           <p class="ss-body-line" style="--li:2">
-            This is the archive of those migrations.
+            This is a graph of those migrations. At its centre: source texts —
+            the works that have travelled furthest, lodged most stubbornly
+            in the cultural body. Radiating outward: the stories they made possible.
+            Each connection is a stitch. Each stitch holds something together
+            that would otherwise drift apart.
+          </p>
+          <p class="ss-body-line ss-body-line--closing" style="--li:3">
+            What you are reading now is the knot at the centre of the thread.
+            Pull gently.
           </p>
         </div>
 
-        {/* CTA */}
         <div class="ss-onboarding-cta">
           <a id="ss-onboarding-enter" href="/SS-0003/SS-0003" class="ss-onboarding-btn" role="button">
             <span class="ss-btn-text">Trace the thread</span>
@@ -51,7 +58,6 @@ const OnboardingOverlay: QuartzComponent = () => {
           </a>
         </div>
 
-        {/* Bottom rule mirror */}
         <div class="ss-onboarding-rule ss-onboarding-rule--bottom" aria-hidden="true">
           <span class="ss-rule-line ss-rule-line--left" />
           <span class="ss-rule-diamond" />
@@ -71,15 +77,6 @@ OnboardingOverlay.afterDOMLoaded = `
     var overlay = document.getElementById("ss-onboarding-overlay");
     if (!overlay) return;
 
-    // Always show on first load; respect localStorage for subsequent navigations
-    var seen = localStorage.getItem("ss-archive-entered");
-
-    if (seen) {
-      overlay.setAttribute("aria-hidden", "true");
-      return;
-    }
-
-    // Small rAF delay so the page beneath has painted
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
         overlay.classList.add("ss-onboarding-visible");
@@ -89,8 +86,7 @@ OnboardingOverlay.afterDOMLoaded = `
 
     var btn = document.getElementById("ss-onboarding-enter");
     if (btn) {
-      btn.addEventListener("click", function (e) {
-        localStorage.setItem("ss-archive-entered", "1");
+      btn.addEventListener("click", function () {
         overlay.classList.add("ss-onboarding-leaving");
         overlay.addEventListener("animationend", function handler(ev) {
           if (ev.animationName !== "ss-overlay-out") return;
