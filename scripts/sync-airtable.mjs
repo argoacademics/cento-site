@@ -90,9 +90,7 @@ function buildMarkdown(record) {
       ? `\n> [!abstract] The Stitch\n> This narrative originates from the phrase **"${stitch}"** extracted from [[${sourceRef}/${sourceRef}|${sourceRef}]]\n`
       : ""
 
-  const storySection = storyBody
-    ? `\n${storyBody.trim()}${sourceRef ? `\n\nThis story is stitched to [[${sourceRef}/${sourceRef}|${sourceRef}]].` : ""}\n`
-    : ""
+  const storySection = storyBody ? `\n${storyBody.trim()}\n` : ""
 
   const explainerSection = explainerBody
     ? `\n---\n\n### Cultural Explainer\n\n${explainerBody.trim()}\n`
