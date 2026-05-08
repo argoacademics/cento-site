@@ -8,6 +8,6 @@ Every story begins somewhere — in a margin note, a misheard phrase, the slant 
 
 This is a graph of those migrations. At its centre: source texts — the works that have travelled furthest, that have lodged most stubbornly in the cultural body. Radiating outward: the stories they have made possible. Each connection is a stitch. Each stitch holds something together that would otherwise drift apart.
 
-The first nodes in this graph are [[SS-0001]], [[SS-0002]], and [[SS-0003]]. From each, stories branch outward.
+The first nodes in this graph radiate outward from [[SS-0003/SS-0003|SS-0003]]. From each, stories branch outward.
 
 What you are reading now is the knot at the centre of the thread. Pull gently.
