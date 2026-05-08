@@ -26,6 +26,10 @@ jobs:
           node-version: 22
       - name: Install Dependencies
         run: npm ci
+      - name: Sync submissions from Airtable
+        run: node scripts/sync-airtable.mjs
+        env:
+          AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
       - name: Build Quartz
         run: npx quartz build
       - name: Upload artifact
