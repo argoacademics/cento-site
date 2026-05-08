@@ -194,6 +194,13 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const width = graph.offsetWidth
   const height = Math.max(graph.offsetHeight, 250)
 
+  // Pin SS-0000 (index) to the canvas centre so it always anchors the graph
+  const rootNode = graphData.nodes.find((n) => n.id === "index")
+  if (rootNode) {
+    rootNode.fx = 0
+    rootNode.fy = 0
+  }
+
   const simulation: Simulation<NodeData, LinkData> = forceSimulation<NodeData>(graphData.nodes)
     .force("charge", forceManyBody().strength(-100 * repelForce))
     .force("center", forceCenter().strength(centerForce))

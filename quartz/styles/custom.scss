@@ -86,11 +86,6 @@
   box-sizing: border-box;
 }
 
-.graph-filter-row {
-  height: 36px;
-  border-top: 1px solid var(--lightgray);
-  padding: 0.3rem 0.75rem;
-}
 
 .graph-btn {
   background: none;
@@ -129,30 +124,6 @@
   letter-spacing: 0;
 }
 
-.graph-filter-btn {
-  background: none;
-  border: 1px solid var(--lightgray);
-  color: var(--gray);
-  font-family: var(--headerFont), serif;
-  font-size: 0.55rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 0.18rem 0.5rem;
-  border-radius: 2px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: border-color 0.2s ease, color 0.2s ease;
-
-  &.active {
-    border-color: var(--secondary);
-    color: var(--secondary);
-  }
-
-  &:hover {
-    border-color: var(--tertiary);
-    color: var(--tertiary);
-  }
-}
 
 .graph-search-input {
   flex: 1;
@@ -442,7 +413,37 @@ footer p {
   display: none;
   position: fixed;
   inset: 0 50vw 0 0;
+  // Very subtle crosshatch: faint horizontal + vertical rules, ~10% opacity
   background-color: var(--light);
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 39px,
+      rgba(255, 255, 255, 0.03) 39px,
+      rgba(255, 255, 255, 0.03) 40px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 39px,
+      rgba(255, 255, 255, 0.03) 39px,
+      rgba(255, 255, 255, 0.03) 40px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 39px,
+      rgba(139, 26, 26, 0.025) 39px,
+      rgba(139, 26, 26, 0.025) 40px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 39px,
+      rgba(139, 26, 26, 0.025) 39px,
+      rgba(139, 26, 26, 0.025) 40px
+    );
   z-index: 9999;
   align-items: center;
   justify-content: center;

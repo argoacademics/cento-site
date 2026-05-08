@@ -91,20 +91,6 @@ export default ((opts?: Partial<GraphOptions>) => {
               placeholder="Search…"
             />
           </div>
-          <div class="graph-controls-row graph-filter-row">
-            <button class="graph-filter-btn active" data-filter="title">
-              Title
-            </button>
-            <button class="graph-filter-btn" data-filter="tags">
-              Tags
-            </button>
-            <button class="graph-filter-btn" data-filter="stitch">
-              Stitch
-            </button>
-            <button class="graph-filter-btn" data-filter="author">
-              Author
-            </button>
-          </div>
         </div>
         <div class="graph-outer">
           <div class="graph-container" data-cfg={JSON.stringify(localGraph)}></div>
