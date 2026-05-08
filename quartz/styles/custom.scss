@@ -5,23 +5,22 @@
 // ════════════════════════════════════════════════════════════
 
 // ── Crosshatch grid pattern (shared by page and overlay) ─────
-$grid-color-white: rgba(255, 255, 255, 0.03);
-$grid-color-crimson: rgba(139, 26, 26, 0.025);
+$grid-color: rgba(139, 26, 26, 0.08);
 $grid-size: 40px;
 
 @mixin crosshatch-bg {
   background-image:
     repeating-linear-gradient(
       45deg,
-      $grid-color-crimson 0px,
-      $grid-color-crimson 1px,
+      $grid-color 0px,
+      $grid-color 1px,
       transparent 1px,
       transparent #{$grid-size}
     ),
     repeating-linear-gradient(
       135deg,
-      $grid-color-crimson 0px,
-      $grid-color-crimson 1px,
+      $grid-color 0px,
+      $grid-color 1px,
       transparent 1px,
       transparent #{$grid-size}
     );
