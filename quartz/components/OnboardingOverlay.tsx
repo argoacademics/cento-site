@@ -13,10 +13,10 @@ const OnboardingOverlay: QuartzComponent = () => {
 
         <p class="ss-onboarding-kicker">A literary archive</p>
 
-        <h1 class="ss-onboarding-title">
-          <div class="ss-title-word" style="--wi:0">Stitched</div>
-          <div class="ss-title-word" style="--wi:1">Stories</div>
-        </h1>
+        <div class="ss-onboarding-title" role="heading" aria-level={1}>
+          <span class="ss-title-word" style="--wi:0">Stitched</span>
+          <span class="ss-title-word" style="--wi:1">Stories</span>
+        </div>
 
         <div class="ss-onboarding-body">
           <p class="ss-body-line" style="--li:0">

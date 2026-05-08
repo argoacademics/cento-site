@@ -457,6 +457,9 @@ footer p {
   width: 100%;
   padding: 3rem 2rem;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 // ── Threaded rule ─────────────────────────────────────────────
@@ -518,10 +521,16 @@ footer p {
   font-weight: 400;
   margin: 0 0 1.75rem;
   line-height: 1.2;
+  // Force block context so spans stack vertically
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
 .ss-title-word {
   display: block;
+  width: 100%;
   white-space: nowrap;
   text-align: center;
   opacity: 0;
