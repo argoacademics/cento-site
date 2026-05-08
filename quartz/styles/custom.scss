@@ -180,6 +180,7 @@ $grid-size: 40px;
   display: flex !important;
   flex-direction: column;
   line-height: 1.1;
+  width: max-content;
 
   &:hover {
     color: var(--tertiary) !important;
@@ -188,6 +189,7 @@ $grid-size: 40px;
 
 .home-button-line {
   display: block;
+  white-space: nowrap;
 }
 
 // ── Site title ───────────────────────────────────────────────
