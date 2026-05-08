@@ -11,10 +11,10 @@ $grid-size: 40px;
 
 @mixin crosshatch-bg {
   background-image:
-    repeating-linear-gradient(90deg,  transparent, transparent #{$grid-size - 1}, $grid-color-white   #{$grid-size - 1}, $grid-color-white   #{$grid-size}),
-    repeating-linear-gradient(180deg, transparent, transparent #{$grid-size - 1}, $grid-color-white   #{$grid-size - 1}, $grid-color-white   #{$grid-size}),
-    repeating-linear-gradient(90deg,  transparent, transparent #{$grid-size - 1}, $grid-color-crimson #{$grid-size - 1}, $grid-color-crimson #{$grid-size}),
-    repeating-linear-gradient(180deg, transparent, transparent #{$grid-size - 1}, $grid-color-crimson #{$grid-size - 1}, $grid-color-crimson #{$grid-size});
+    repeating-linear-gradient(45deg,  transparent, transparent #{$grid-size - 1}, $grid-color-white   #{$grid-size - 1}, $grid-color-white   #{$grid-size}),
+    repeating-linear-gradient(135deg, transparent, transparent #{$grid-size - 1}, $grid-color-white   #{$grid-size - 1}, $grid-color-white   #{$grid-size}),
+    repeating-linear-gradient(45deg,  transparent, transparent #{$grid-size - 1}, $grid-color-crimson #{$grid-size - 1}, $grid-color-crimson #{$grid-size}),
+    repeating-linear-gradient(135deg, transparent, transparent #{$grid-size - 1}, $grid-color-crimson #{$grid-size - 1}, $grid-color-crimson #{$grid-size});
 }
 
 // ── Full-width page container ────────────────────────────────
