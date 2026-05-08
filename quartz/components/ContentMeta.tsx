@@ -29,6 +29,13 @@ export default ((opts?: Partial<ContentMetaOptions>) => {
     if (text) {
       const segments: (string | JSX.Element)[] = []
 
+      const submitter = (fileData.frontmatter as Record<string, unknown>)?.submitter as
+        | string
+        | undefined
+      if (submitter) {
+        segments.push(<span class="content-meta-submitter">{submitter}</span>)
+      }
+
       if (fileData.dates) {
         segments.push(<Date date={getDate(cfg, fileData)!} locale={cfg.locale} />)
       }
