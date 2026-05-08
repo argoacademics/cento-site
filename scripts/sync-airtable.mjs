@@ -3,7 +3,7 @@
  * Fetches Verified submissions from Airtable and writes them as Quartz
  * markdown files under content/{Source Reference}/{Title}-{recordId}.md
  *
- * Requires: AIRTABLE_API_KEY env var
+ * Requires: AIRTABLE_STITCHED_PT env var
  */
 
 import fs from "fs"
@@ -16,32 +16,12 @@ const CONTENT_DIR = path.resolve(__dirname, "../content")
 const BASE_ID = "appI3b2eKqgY9XWuQ"
 const TABLE_ID = "tblpfCliNwnlmUt8Y"
 
-const FIELDS = [
-  "fldg2CqdBfcqamig2", // Name
-  "fldMvleFtM9QoF5o7", // Source Reference
-  "fldiDdrNv6X7RpOdh", // Status
-  "fldgjKjoWzKzB6UVw", // Title
-  "fldTgLFFlmTgVkICe", // Stitch
-  "fldehSXhaOFVCgUsW", // Story Body
-  "fldidfmw259IWlbpO", // Explainer Body
-  "fldwSY4Q9ImqseWbX", // Tags
-  "fldzKzYaO33ZCzmGM", // Affiliation
-  "fldIjsbg1NBtIS2Gv", // Submitted at
-]
-
 async function fetchRecords(apiKey) {
   const records = []
   let offset = null
 
   do {
-    const params = new URLSearchParams({
-      "fields[]": FIELDS,
-      "filterByFormula": `{Status} = "Verified"`,
-      pageSize: 100,
-    })
-    // URLSearchParams collapses repeated keys; rebuild for fields[]
     const url = new URL(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}`)
-    for (const f of FIELDS) url.searchParams.append("fields[]", f)
     url.searchParams.set("filterByFormula", `{Status} = "Verified"`)
     url.searchParams.set("pageSize", "100")
     if (offset) url.searchParams.set("offset", offset)
@@ -72,20 +52,21 @@ function slugify(str) {
 
 function yamlStr(value) {
   if (!value) return '""'
-  // Wrap in quotes; escape internal quotes
-  return `"${String(value).replace(/"/g, '\\"')}"`
+  return `"${String(value).replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`
 }
 
 function buildMarkdown(record) {
-  const f = record.cellValuesByFieldId
-  const title = f["fldgjKjoWzKzB6UVw"] ?? record.id
-  const sourceRef = f["fldMvleFtM9QoF5o7"] ?? ""
-  const stitch = f["fldTgLFFlmTgVkICe"] ?? ""
-  const name = f["fldg2CqdBfcqamig2"] ?? ""
-  const affiliation = f["fldzKzYaO33ZCzmGM"] ?? ""
-  const tags = f["fldwSY4Q9ImqseWbX"] ?? ""
-  const storyBody = f["fldehSXhaOFVCgUsW"] ?? ""
-  const explainerBody = f["fldidfmw259IWlbpO"] ?? ""
+  // Airtable REST API returns fields by name under record.fields
+  const f = record.fields ?? {}
+
+  const title = f["Title"] ?? record.id
+  const sourceRef = f["Source Reference"] ?? ""
+  const stitch = f["Stitch"] ?? ""
+  const name = f["Name"] ?? ""
+  const affiliation = f["Affiliation"] ?? ""
+  const tags = f["Tags"] ?? ""
+  const storyBody = f["Story Body"] ?? ""
+  const explainerBody = f["Explainer Body"] ?? ""
 
   const parentLink = sourceRef ? `[[${sourceRef}/${sourceRef}]]` : ""
 
@@ -132,9 +113,9 @@ async function main() {
   console.log(`Found ${records.length} verified record(s)`)
 
   for (const record of records) {
-    const f = record.cellValuesByFieldId
-    const sourceRef = f["fldMvleFtM9QoF5o7"]
-    const title = f["fldgjKjoWzKzB6UVw"]
+    const f = record.fields ?? {}
+    const sourceRef = f["Source Reference"]
+    const title = f["Title"]
 
     if (!sourceRef || !title) {
       console.warn(`  Skipping ${record.id} — missing Source Reference or Title`)

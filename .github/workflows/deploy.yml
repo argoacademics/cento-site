@@ -27,9 +27,7 @@ jobs:
       - name: Install Dependencies
         run: npm ci
       - name: Sync submissions from Airtable
-        run: |
-          echo "API key length: ${#AIRTABLE_STITCHED_PT}"
-          node scripts/sync-airtable.mjs
+        run: node scripts/sync-airtable.mjs
         env:
           AIRTABLE_STITCHED_PT: ${{ secrets.AIRTABLE_STITCHED_PT }}
       - name: Build Quartz
