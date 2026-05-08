@@ -13,17 +13,9 @@ const OnboardingOverlay: QuartzComponent = () => {
 
         <p class="ss-onboarding-kicker">A literary archive</p>
 
-        <h1 class="ss-onboarding-title" aria-label="Stitched Stories">
-          <span class="ss-title-word" aria-hidden="true">
-            {"Stitched".split("").map((ch, i) => (
-              <span class="ss-title-char" style={`--i:${i}`}>{ch}</span>
-            ))}
-          </span>
-          <span class="ss-title-word" aria-hidden="true">
-            {"Stories".split("").map((ch, i) => (
-              <span class="ss-title-char" style={`--i:${i + 9}`}>{ch}</span>
-            ))}
-          </span>
+        <h1 class="ss-onboarding-title">
+          <div class="ss-title-word" style="--wi:0">Stitched</div>
+          <div class="ss-title-word" style="--wi:1">Stories</div>
         </h1>
 
         <div class="ss-onboarding-body">
