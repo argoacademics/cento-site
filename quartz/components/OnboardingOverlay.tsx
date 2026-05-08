@@ -19,7 +19,6 @@ const OnboardingOverlay: QuartzComponent = () => {
               <span class="ss-title-char" style={`--i:${i}`}>{ch}</span>
             ))}
           </span>
-          <span class="ss-title-space" aria-hidden="true">&nbsp;</span>
           <span class="ss-title-word" aria-hidden="true">
             {"Stories".split("").map((ch, i) => (
               <span class="ss-title-char" style={`--i:${i + 9}`}>{ch}</span>
