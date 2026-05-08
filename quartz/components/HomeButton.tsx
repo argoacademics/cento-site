@@ -4,7 +4,8 @@ const HomeButton: QuartzComponent = () => {
   return (
     <div class="home-button">
       <a href="/" class="home-button-link">
-        Stitched Stories
+        <span class="home-button-line">Stitched</span>
+        <span class="home-button-line">Stories</span>
       </a>
     </div>
   )
