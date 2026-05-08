@@ -121,9 +121,9 @@ function buildMarkdown(record) {
 }
 
 async function main() {
-  const apiKey = process.env.AIRTABLE_API_KEY
+  const apiKey = process.env.AIRTABLE_STITCHED_PT
   if (!apiKey) {
-    console.error("AIRTABLE_API_KEY is not set")
+    console.error("AIRTABLE_STITCHED_PT is not set")
     process.exit(1)
   }
 

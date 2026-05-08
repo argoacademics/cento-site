@@ -28,10 +28,10 @@ jobs:
         run: npm ci
       - name: Sync submissions from Airtable
         run: |
-          echo "API key length: ${#AIRTABLE_API_KEY}"
+          echo "API key length: ${#AIRTABLE_STITCHED_PT}"
           node scripts/sync-airtable.mjs
         env:
-          AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_STITCHED_PT }}
+          AIRTABLE_STITCHED_PT: ${{ secrets.AIRTABLE_STITCHED_PT }}
       - name: Build Quartz
         run: npx quartz build
       - name: Upload artifact
