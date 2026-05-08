@@ -450,8 +450,7 @@ footer p {
   display: none;
   position: fixed;
   inset: 0 50vw 0 0;
-  background-color: var(--light);
-  @include crosshatch-bg;
+  background-color: transparent;
   z-index: 9999;
   align-items: center;
   justify-content: center;
