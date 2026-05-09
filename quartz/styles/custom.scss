@@ -4,17 +4,21 @@
 //  STITCHED STORIES — PRESENTATION LAYER
 // ════════════════════════════════════════════════════════════
 
-// ── Crosshatch grid pattern ───────────────────────────────────
-@mixin crosshatch-bg {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M0 40 L40 0 M-10 10 L10 -10 M30 50 L50 30' stroke='%23ffffff' stroke-opacity='0.08' stroke-width='1'/%3E%3Cpath d='M0 0 L40 40 M-10 30 L30 -10 M10 50 L50 10' stroke='%23ffffff' stroke-opacity='0.08' stroke-width='1'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 40px 40px;
+// ── Diagonal crosshatch applied to the two content panels ────
+// Uses background-size tiling: a 20x20 cell with two diagonal
+// 1px crimson lines (/ and \) composited over the base colour.
+$hatch: rgba(139, 26, 26, 0.35);
+
+@mixin panel-bg {
+  background-color: var(--light);
+  background-image:
+    linear-gradient(45deg,  $hatch 1px, transparent 1px),
+    linear-gradient(135deg, $hatch 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
-// ── Root background — pattern on body so it persists everywhere ─
 body {
   background-color: var(--light);
-  @include crosshatch-bg;
 }
 
 // ── Full-width page container ────────────────────────────────
@@ -50,7 +54,7 @@ body {
     padding: 0 3.5rem !important;
     border-bottom: 1px solid var(--lightgray);
     padding-bottom: 1rem !important;
-    background: transparent !important;
+    @include panel-bg;
   }
 
   // Article content
@@ -59,7 +63,7 @@ body {
     max-width: 100% !important;
     min-width: 0 !important;
     overflow-y: auto;
-    background: transparent !important;
+    @include panel-bg;
   }
 
   // Footer in left column
@@ -68,7 +72,7 @@ body {
     min-width: 0 !important;
     padding: 1rem 3.5rem !important;
     border-top: 1px solid var(--lightgray);
-    background: transparent !important;
+    @include panel-bg;
   }
 
   // Right panel — full-height persistent graph
@@ -80,8 +84,8 @@ body {
     flex-direction: column !important;
     border-left: 1px solid var(--lightgray);
     overflow: hidden;
-    background-color: transparent;
     display: flex !important;
+    @include panel-bg;
   }
 }
 
@@ -89,7 +93,7 @@ body {
 .graph-controls {
   display: flex;
   flex-direction: column;
-  background-color: transparent;
+  background-color: var(--light);
   border-bottom: 1px solid var(--lightgray);
   flex-shrink: 0;
 }
@@ -435,7 +439,7 @@ footer p {
   display: none;
   position: fixed;
   inset: 0 50vw 0 0;
-  background-color: transparent;
+  @include panel-bg;
   z-index: 9999;
   align-items: center;
   justify-content: center;
