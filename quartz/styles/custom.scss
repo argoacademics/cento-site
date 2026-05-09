@@ -5,16 +5,25 @@
 // ════════════════════════════════════════════════════════════
 
 // ── Diagonal crosshatch applied to the two content panels ────
-// Uses background-size tiling: a 20x20 cell with two diagonal
-// 1px crimson lines (/ and \) composited over the base colour.
-$hatch: rgba(139, 26, 26, 0.35);
+$hatch: rgba(139, 26, 26, 0.3);
 
 @mixin panel-bg {
   background-color: var(--light);
   background-image:
-    linear-gradient(45deg,  $hatch 1px, transparent 1px),
-    linear-gradient(135deg, $hatch 1px, transparent 1px);
-  background-size: 20px 20px;
+    repeating-linear-gradient(
+      45deg,
+      transparent 0px,
+      transparent 18px,
+      $hatch 18px,
+      $hatch 19px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent 0px,
+      transparent 18px,
+      $hatch 18px,
+      $hatch 19px
+    );
 }
 
 body {
