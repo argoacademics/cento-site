@@ -19,13 +19,13 @@ body {
   background-image:
     repeating-linear-gradient(45deg,
       rgba(139, 26, 26, 0.25) 0px, rgba(139, 26, 26, 0.25) 1px,
-      transparent 1px, transparent 40px
+      transparent 1px, transparent 20px
     ),
     repeating-linear-gradient(-45deg,
       rgba(139, 26, 26, 0.25) 0px, rgba(139, 26, 26, 0.25) 1px,
-      transparent 1px, transparent 40px
+      transparent 1px, transparent 20px
     ) !important;
-  background-size: 56px 56px !important;
+  background-size: 28px 28px !important;
   background-attachment: fixed !important;
 }
 
