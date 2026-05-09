@@ -4,44 +4,34 @@
 //  STITCHED STORIES — PRESENTATION LAYER
 // ════════════════════════════════════════════════════════════
 
-// ── Diagonal crosshatch — pseudo-element on html so nothing covers it ─
-$hatch: rgba(139, 26, 26, 0.12);
+// ── Diagonal crosshatch ───────────────────────────────────────
+// background-size: 56px 56px with 1px colour stops at 0 aligns
+// 45° and -45° diagonals correctly so they meet at the centre.
+// background-attachment:fixed pins the pattern to the viewport.
 
-html {
-  background-color: var(--light);
-}
-
-html::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image:
-    repeating-linear-gradient(
-      45deg,
-      transparent 0px,
-      transparent 28px,
-      $hatch 28px,
-      $hatch 29px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      transparent 0px,
-      transparent 28px,
-      $hatch 28px,
-      $hatch 29px
-    );
+html, body {
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  background-color: transparent !important;
-  position: relative;
-  z-index: 1;
+  background-color: #0e0e0e !important;
+  background-image:
+    repeating-linear-gradient(45deg,
+      rgba(139, 26, 26, 0.25) 0px, rgba(139, 26, 26, 0.25) 1px,
+      transparent 1px, transparent 40px
+    ),
+    repeating-linear-gradient(-45deg,
+      rgba(139, 26, 26, 0.25) 0px, rgba(139, 26, 26, 0.25) 1px,
+      transparent 1px, transparent 40px
+    ) !important;
+  background-size: 56px 56px !important;
+  background-attachment: fixed !important;
 }
 
 @mixin panel-bg {
   background-color: transparent !important;
+  background-image: none !important;
 }
 
 // ── Full-width page container ────────────────────────────────
