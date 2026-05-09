@@ -4,11 +4,19 @@
 //  STITCHED STORIES — PRESENTATION LAYER
 // ════════════════════════════════════════════════════════════
 
-// ── Diagonal crosshatch — fixed to viewport so it never truncates ─
+// ── Diagonal crosshatch — pseudo-element on html so nothing covers it ─
 $hatch: rgba(139, 26, 26, 0.12);
 
-body {
+html {
   background-color: var(--light);
+}
+
+html::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
   background-image:
     repeating-linear-gradient(
       45deg,
@@ -24,11 +32,16 @@ body {
       $hatch 28px,
       $hatch 29px
     );
-  background-attachment: fixed;
+}
+
+body {
+  background-color: transparent !important;
+  position: relative;
+  z-index: 1;
 }
 
 @mixin panel-bg {
-  background-color: transparent;
+  background-color: transparent !important;
 }
 
 // ── Full-width page container ────────────────────────────────
