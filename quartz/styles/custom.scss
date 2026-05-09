@@ -4,30 +4,31 @@
 //  STITCHED STORIES — PRESENTATION LAYER
 // ════════════════════════════════════════════════════════════
 
-// ── Diagonal crosshatch applied to the two content panels ────
-$hatch: rgba(139, 26, 26, 0.3);
+// ── Diagonal crosshatch — fixed to viewport so it never truncates ─
+$hatch: rgba(139, 26, 26, 0.12);
 
-@mixin panel-bg {
+body {
   background-color: var(--light);
   background-image:
     repeating-linear-gradient(
       45deg,
       transparent 0px,
-      transparent 18px,
-      $hatch 18px,
-      $hatch 19px
+      transparent 28px,
+      $hatch 28px,
+      $hatch 29px
     ),
     repeating-linear-gradient(
       -45deg,
       transparent 0px,
-      transparent 18px,
-      $hatch 18px,
-      $hatch 19px
+      transparent 28px,
+      $hatch 28px,
+      $hatch 29px
     );
+  background-attachment: fixed;
 }
 
-body {
-  background-color: var(--light);
+@mixin panel-bg {
+  background-color: transparent;
 }
 
 // ── Full-width page container ────────────────────────────────
@@ -448,7 +449,7 @@ footer p {
   display: none;
   position: fixed;
   inset: 0 50vw 0 0;
-  @include panel-bg;
+  background-color: rgba(14, 14, 14, 0.92);
   z-index: 9999;
   align-items: center;
   justify-content: center;
