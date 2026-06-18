@@ -20,10 +20,7 @@ const OnboardingOverlay: QuartzComponent = () => {
 
         <div class="ss-onboarding-title" role="heading" aria-level={1}>
           <span class="ss-title-word" style="--wi:0">
-            Stitched
-          </span>
-          <span class="ss-title-word" style="--wi:1">
-            Stories
+            Cento
           </span>
         </div>
 

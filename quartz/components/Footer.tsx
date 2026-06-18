@@ -5,7 +5,7 @@ export default (() => {
   const Footer: QuartzComponent = ({ displayClass }: QuartzComponentProps) => {
     return (
       <footer class={`${displayClass ?? ""}`}>
-        <p>Stitched Stories</p>
+        <p>Cento</p>
       </footer>
     )
   }
