@@ -55,13 +55,11 @@ const StoryNav: QuartzComponent = ({ fileData, allFiles }: QuartzComponentProps)
     : null
 
   const prevTitle =
-    ((prevFile?.frontmatter as Record<string, unknown> | undefined)?.title as
-      | string
-      | undefined) ?? ""
+    ((prevFile?.frontmatter as Record<string, unknown> | undefined)?.title as string | undefined) ??
+    ""
   const nextTitle =
-    ((nextFile?.frontmatter as Record<string, unknown> | undefined)?.title as
-      | string
-      | undefined) ?? ""
+    ((nextFile?.frontmatter as Record<string, unknown> | undefined)?.title as string | undefined) ??
+    ""
 
   return (
     <nav class="story-nav">

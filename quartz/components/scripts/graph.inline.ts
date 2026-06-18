@@ -16,8 +16,8 @@ import {
 } from "d3"
 import { Text, Graphics, Application, Container, Circle } from "pixi.js"
 import { Group as TweenGroup, Tween as Tweened } from "@tweenjs/tween.js"
-import { registerEscapeHandler, removeAllChildren } from "./util"
-import { FullSlug, SimpleSlug, getFullSlug, resolveRelative, simplifySlug } from "../../util/path"
+import { removeAllChildren } from "./util"
+import { FullSlug, SimpleSlug, resolveRelative, simplifySlug } from "../../util/path"
 import { D3Config } from "../Graph"
 
 type GraphicsInfo = {
@@ -93,8 +93,7 @@ function nodeMatchesFilter(node: NodeData): boolean {
       return details ? (details.content ?? "").toLowerCase().includes(searchQuery) : false
     default:
       return (
-        node.text.toLowerCase().includes(searchQuery) ||
-        node.id.toLowerCase().includes(searchQuery)
+        node.text.toLowerCase().includes(searchQuery) || node.id.toLowerCase().includes(searchQuery)
       )
   }
 }
@@ -293,8 +292,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       // Search filter: fade out edges not connected to a matching node
       if (searchQuery) {
         const srcMatches =
-          nodeMatchesFilter(l.simulationData.source) ||
-          nodeMatchesFilter(l.simulationData.target)
+          nodeMatchesFilter(l.simulationData.source) || nodeMatchesFilter(l.simulationData.target)
         if (!srcMatches) alpha = 0.03
       }
 

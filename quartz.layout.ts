@@ -5,17 +5,11 @@ export const sharedPageComponents: SharedLayout = {
   head: Component.Head(),
   header: [Component.HomeButton()],
   afterBody: [Component.OnboardingOverlay(), Component.StoryNav()],
-  footer: Component.Footer({
-    links: {},
-  }),
+  footer: Component.Footer(),
 }
 
 export const defaultContentPageLayout: PageLayout = {
-  beforeBody: [
-    Component.ArticleTitle(),
-    Component.ContentMeta(),
-    Component.TagList(),
-  ],
+  beforeBody: [Component.ArticleTitle(), Component.ContentMeta(), Component.TagList()],
   left: [],
   right: [
     Component.Graph({

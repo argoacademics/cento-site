@@ -1,7 +1,7 @@
 import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
 import style from "./styles/footer.scss"
 
-export default ((() => {
+export default (() => {
   const Footer: QuartzComponent = ({ displayClass }: QuartzComponentProps) => {
     return (
       <footer class={`${displayClass ?? ""}`}>
@@ -12,4 +12,4 @@ export default ((() => {
 
   Footer.css = style
   return Footer
-}) satisfies QuartzComponentConstructor)
+}) satisfies QuartzComponentConstructor

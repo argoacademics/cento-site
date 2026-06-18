@@ -37,8 +37,8 @@ export const StitchPhrase: QuartzTransformerPlugin = () => {
             }
             const replacements: Replacement[] = []
 
-            visit(tree, "text", (node: Text, index: number | null, parent) => {
-              if (index === null || !parent) return
+            visit(tree, "text", (node: Text, index: number | undefined, parent) => {
+              if (index === undefined || !parent) return
               const parentEl = parent as Element
               // Skip code blocks, pre, existing anchors, headings
               const skipTags = ["code", "pre", "a", "h1", "h2", "h3", "h4", "h5", "h6"]

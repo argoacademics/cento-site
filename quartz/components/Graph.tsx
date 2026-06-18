@@ -61,7 +61,6 @@ const defaultOptions: GraphOptions = {
 export default ((opts?: Partial<GraphOptions>) => {
   const Graph: QuartzComponent = ({ displayClass }: QuartzComponentProps) => {
     const localGraph = { ...defaultOptions.localGraph, ...opts?.localGraph }
-    const globalGraph = { ...defaultOptions.globalGraph, ...opts?.globalGraph }
     return (
       <div class={classNames(displayClass, "graph")}>
         <div class="graph-controls">
@@ -77,11 +76,7 @@ export default ((opts?: Partial<GraphOptions>) => {
             >
               ←
             </button>
-            <button
-              class="graph-btn graph-btn-arrow"
-              id="graph-btn-hem-fwd"
-              title="Follow the hem"
-            >
+            <button class="graph-btn graph-btn-arrow" id="graph-btn-hem-fwd" title="Follow the hem">
               →
             </button>
             <input
