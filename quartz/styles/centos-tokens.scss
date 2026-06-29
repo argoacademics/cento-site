@@ -382,10 +382,12 @@
   --container-narrow: 720px;
   --gutter: clamp(1rem, 4vw, 3rem);
 
-  /* ── Bisected layout (left text column / right graph panel) ──
-     Systematised: change the split or gutter here, not inline. */
-  --right-panel-w: 42vw; /* width of the persistent graph panel */
-  --left-gutter: clamp(2rem, 5vw, 5.5rem); /* left-column inner padding */
+  /* ── Bisected layout — viewport split cleanly 50/50:
+     left = story, right = graph/map. Keep the split at 50vw.
+     The story's own inner gutter is kept tight so the text fills its
+     half rather than sitting in a narrow over-padded band. */
+  --right-panel-w: 50vw; /* graph panel = exactly half the viewport */
+  --left-gutter: clamp(1.25rem, 2.5vw, 2.75rem); /* tight story padding */
 }
 
 // ─── Motif utilities — seams, hems, weave, threads ──────────────────
