@@ -26,14 +26,20 @@ const headerRegex = new RegExp(/h[1-6]/)
 export function pageResources(
   baseDir: FullSlug | RelativeURL,
   staticResources: StaticResources,
+  cacheBust?: string,
 ): StaticResources {
   const contentIndexPath = joinSegments(baseDir, "static/contentIndex.json")
   const contentIndexScript = `const fetchData = fetch("${contentIndexPath}").then(data => data.json())`
 
+  // Per-build cache-bust token appended to the main stylesheet URL so each
+  // deploy forces browsers to fetch the new CSS (Quartz emits an unhashed
+  // index.css; without this the 10-min Pages cache serves stale styles).
+  const cssQuery = cacheBust ? `?v=${cacheBust}` : ""
+
   const resources: StaticResources = {
     css: [
       {
-        content: joinSegments(baseDir, "index.css"),
+        content: joinSegments(baseDir, "index.css") + cssQuery,
       },
       ...staticResources.css,
     ],

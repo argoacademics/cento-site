@@ -314,15 +314,21 @@ article {
     color: var(--text-body) !important;
   }
 
-  // Lead paragraph drop cap — ember initial in the ornament face.
-  > p:first-of-type::first-letter {
+  // Drop caps — deterministic, wrapped at sync time in <span class="dropcap">
+  // (immune to ::first-letter failing on quote/link/emphasis-led paragraphs).
+  // Story lead = ember; Cultural Explainer lead = brass.
+  .dropcap {
     font-family: var(--font-ornament);
-    font-size: 3.4em;
-    line-height: 0.8;
+    font-size: 3.1em;
+    line-height: 0.72;
     float: left;
-    margin: 0.05em 0.08em 0 0;
-    color: var(--accent-ember);
+    margin: 0.02em 0.09em 0 0;
     font-weight: var(--w-black);
+    color: var(--accent-ember);
+  }
+
+  .dropcap-explainer {
+    color: var(--accent-brass);
   }
 
   // Internal links — crimson, no background bubble

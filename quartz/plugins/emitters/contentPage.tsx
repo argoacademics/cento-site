@@ -25,7 +25,7 @@ async function processContent(
 ) {
   const slug = fileData.slug!
   const cfg = ctx.cfg.configuration
-  const externalResources = pageResources(pathToRoot(slug), resources)
+  const externalResources = pageResources(pathToRoot(slug), resources, ctx.buildId)
   const componentData: QuartzComponentProps = {
     ctx,
     fileData,

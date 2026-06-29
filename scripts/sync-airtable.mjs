@@ -55,6 +55,22 @@ function yamlStr(value) {
   return `"${String(value).replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`
 }
 
+// Wrap the first real letter of a body in <span class="dropcap …"> so the
+// drop cap is deterministic — immune to the ::first-letter quirks that drop it
+// when a paragraph starts with a quote, link, or emphasis. Skips any leading
+// markdown/punctuation (e.g. an opening curly/straight quote) and caps the
+// first alphanumeric character. Returns the body unchanged if none is found.
+function dropCap(body, className) {
+  if (!body) return body
+  // Match leading whitespace/punctuation, then the first alphanumeric char.
+  const m = body.match(/^(\s*[^\p{L}\p{N}]*)(\p{L}|\p{N})/u)
+  if (!m) return body
+  const lead = m[1]
+  const letter = m[2]
+  const rest = body.slice(m[0].length)
+  return `${lead}<span class="dropcap ${className}">${letter}</span>${rest}`
+}
+
 function buildMarkdown(record) {
   // Airtable REST API returns fields by name under record.fields
   const f = record.fields ?? {}
@@ -90,10 +106,10 @@ function buildMarkdown(record) {
       ? `\n> [!abstract] The Stitch\n> This narrative originates from the phrase **"${stitch}"** extracted from [[${sourceRef}/${sourceRef}|${sourceRef}]]\n`
       : ""
 
-  const storySection = storyBody ? `\n${storyBody.trim()}\n` : ""
+  const storySection = storyBody ? `\n${dropCap(storyBody.trim(), "dropcap-story")}\n` : ""
 
   const explainerSection = explainerBody
-    ? `\n---\n\n### Cultural Explainer\n\n${explainerBody.trim()}\n`
+    ? `\n---\n\n### Cultural Explainer\n\n${dropCap(explainerBody.trim(), "dropcap-explainer")}\n`
     : ""
 
   return `${frontmatter}\n${stitchCallout}${storySection}${explainerSection}`
