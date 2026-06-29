@@ -1,0 +1,325 @@
+// ════════════════════════════════════════════════════════════════════
+//  CENTOS — Design tokens · "Furnace & Soil"
+//  Ported from the CENTOS Design System (Claude Design 441440fc).
+//  colors / spacing / motif are verbatim; typography is adapted to the
+//  font families this site loads (Google-Font substitutes for the four
+//  bespoke faces until the real OTF/TTF binaries are self-hosted —
+//  Bonny→Fraunces, Pardal→Hanken Grotesk, Zina→Cinzel, Dirtyline→Fraunces).
+//  These vars sit alongside Quartz's own --secondary/--tertiary/--bodyFont
+//  pipeline (emitted from quartz.config.ts via theme.ts:joinStyles).
+// ════════════════════════════════════════════════════════════════════
+
+// ─── Colour · "Furnace & Soil" ──────────────────────────────────────
+:root {
+  /* Soil — the dark earthen ground (ink → muted) */
+  --loam-1000: #0e0905; /* charred — deepest sunken */
+  --loam-900: #171009; /* page ground */
+  --loam-800: #231811; /* raised surface / cards */
+  --loam-700: #33230f; /* worked soil */
+  --loam-600: #4a3417;
+  --loam-500: #6d4e26;
+  --loam-400: #916c3e; /* faint text / seams */
+  --loam-300: #b4905b; /* muted text — lightest neutral */
+
+  /* Ash — warm pale tones for text on the dark ground */
+  --ash-100: #f4e8d3; /* brightest */
+  --ash-200: #e3d1b2;
+  --ash-300: #c8af88;
+
+  /* Ember — the open flame (hero heat) */
+  --ember-700: #963512;
+  --ember-600: #bb4d18;
+  --ember-500: #db6a23;
+  --ember-400: #ef8a3e;
+  --ember-300: #f6a866;
+
+  /* Brass — molten gold (legacy "wheat") */
+  --wheat-700: #7a5418;
+  --wheat-600: #9c6e22;
+  --wheat-500: #c08f2e;
+  --wheat-400: #d8ab4e;
+  --wheat-300: #e8c87f;
+  --wheat-200: #f0dca6;
+
+  /* Rust — burnt sienna (legacy "clay") */
+  --clay-700: #7a2f12;
+  --clay-600: #963c1c;
+  --clay-500: #b04a22;
+  --clay-400: #c66a3f;
+  --clay-300: #d9926a;
+
+  /* Oxblood / Wine — the ceremonial stitch (legacy "madder") */
+  --madder-700: #4c121b;
+  --madder-600: #722029;
+  --madder-500: #8f2f39;
+  --madder-400: #ad4d56;
+  --madder-300: #c77f86;
+
+  /* Moss — the living thread (primary brand) */
+  --green-900: #13241a;
+  --green-800: #1b3325;
+  --green-700: #264733;
+  --green-600: #33583f;
+  --green-500: #46734f;
+  --green-400: #6a9670;
+  --green-300: #97bd97;
+  --green-200: #bcd6ba;
+  --green-100: #21342a; /* dark moss wash for soft fills */
+
+  /* Slag — cooled steel-teal (the one cool counterpoint; legacy "indigo") */
+  --indigo-700: #173138;
+  --indigo-600: #244c56;
+  --indigo-500: #3a6f7c;
+
+  /* Surfaces (dark) */
+  --paper: #171009; /* page ground (name kept for compat) */
+  --paper-raised: #231811; /* lifted cards */
+  --surface-page: var(--paper);
+  --surface-card: var(--paper-raised);
+  --surface-sunken: var(--loam-1000);
+  --surface-inverse: var(--green-800);
+  --surface-loam: var(--loam-800);
+  --surface-wine: var(--madder-700);
+  --surface-ember: var(--ember-700);
+
+  /* Text (light on dark) */
+  --text-strong: var(--ash-100);
+  --text-body: var(--ash-200);
+  --text-muted: var(--loam-300);
+  --text-faint: var(--loam-400);
+  --text-on-dark: var(--ash-100);
+  --text-on-green: #eaf2e6;
+  --text-link: var(--ember-400);
+
+  /* Brand */
+  --brand: var(--green-700);
+  --brand-hover: var(--green-600);
+  --brand-press: var(--green-800);
+  --brand-soft: var(--green-100);
+  --on-brand: #eaf2e6;
+
+  /* Accents */
+  --accent-ember: var(--ember-500);
+  --accent-brass: var(--wheat-500);
+  --accent-malt: var(--wheat-500);
+  --accent-wheat: var(--wheat-500);
+  --accent-rust: var(--clay-500);
+  --accent-clay: var(--clay-500);
+  --accent-wine: var(--madder-500);
+  --accent-stitch: var(--madder-500); /* the oxblood stitch */
+
+  /* Borders & lines (lighter than the ground) */
+  --border-strong: var(--loam-500);
+  --border: var(--loam-600);
+  --border-soft: #2c1f13;
+  --hairline: color-mix(in srgb, var(--loam-400) 20%, transparent);
+  --seam: var(--loam-500); /* dashed stitch lines */
+
+  /* Status (readable on dark) */
+  --ok: var(--green-400);
+  --ok-soft: #1d3325;
+  --warn: var(--wheat-400);
+  --warn-soft: #392c11;
+  --danger: var(--madder-400);
+  --danger-soft: #3a151a;
+  --info: var(--indigo-500);
+  --info-soft: #16303a;
+
+  /* Focus ring */
+  --focus-ring: color-mix(in srgb, var(--ember-500) 62%, transparent);
+}
+
+// ─── Typography ─────────────────────────────────────────────────────
+// Font families resolve to the substitute Google Fonts this site loads.
+// Swap these values to "Pardal" / "Bonny" / "Zina" / "Dirtyline" once the
+// real faces are self-hosted under /static/fonts/centos/.
+:root {
+  --font-body: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-ui: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-logo: "Cinzel", serif;
+  --font-display: "Fraunces", Georgia, serif; /* editorial headings */
+  --font-display-warm: "Fraunces", Georgia, serif;
+  --font-ornament: "Fraunces", Georgia, serif; /* drop caps, labels */
+
+  /* Weights */
+  --w-light: 300;
+  --w-regular: 400;
+  --w-medium: 500;
+  --w-semibold: 600;
+  --w-bold: 700;
+  --w-extrabold: 800;
+  --w-black: 900;
+
+  /* Type scale */
+  --fs-display-xl: clamp(3.5rem, 6vw, 5.5rem);
+  --fs-display-l: clamp(2.75rem, 4.5vw, 4rem);
+  --fs-display-m: clamp(2.25rem, 3.5vw, 3rem);
+  --fs-h1: 2.25rem;
+  --fs-h2: 1.75rem;
+  --fs-h3: 1.375rem;
+  --fs-h4: 1.125rem;
+  --fs-body-lg: 1.125rem;
+  --fs-body: 1rem;
+  --fs-body-sm: 0.9375rem;
+  --fs-caption: 0.8125rem;
+  --fs-overline: 0.75rem;
+
+  /* Line heights */
+  --lh-tight: 1.05;
+  --lh-display: 1.12;
+  --lh-snug: 1.3;
+  --lh-body: 1.6;
+  --lh-relaxed: 1.75;
+
+  /* Letter spacing */
+  --ls-tight: -0.02em;
+  --ls-normal: 0;
+  --ls-wide: 0.04em;
+  --ls-overline: 0.16em;
+  --ls-logo: 0.06em;
+}
+
+// ─── Spacing, radius, shadow, motion, layout ────────────────────────
+:root {
+  /* Spacing (4px base loom) */
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+
+  /* Radius */
+  --radius-xs: 3px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+  --radius-card: 14px;
+
+  /* Borders */
+  --bw-hair: 1px;
+  --bw: 1.5px;
+  --bw-thick: 2px;
+  --stitch-dash: 6px 5px;
+
+  /* Shadows (deep — cast into dark earth) */
+  --shadow-xs: 0 1px 2px color-mix(in srgb, #000 28%, transparent);
+  --shadow-sm:
+    0 1px 2px color-mix(in srgb, #000 30%, transparent),
+    0 2px 6px color-mix(in srgb, #000 26%, transparent);
+  --shadow-md:
+    0 2px 4px color-mix(in srgb, #000 30%, transparent),
+    0 10px 24px color-mix(in srgb, #000 40%, transparent);
+  --shadow-lg:
+    0 4px 8px color-mix(in srgb, #000 34%, transparent),
+    0 24px 50px color-mix(in srgb, #000 52%, transparent);
+  --shadow-inset: inset 0 1px 2px color-mix(in srgb, #000 36%, transparent);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.6, 0, 0.2, 1);
+  --ease-thread: cubic-bezier(0.34, 1.2, 0.5, 1);
+  --dur-fast: 120ms;
+  --dur: 200ms;
+  --dur-slow: 340ms;
+
+  /* Layout */
+  --container: 1180px;
+  --container-narrow: 720px;
+  --gutter: clamp(1rem, 4vw, 3rem);
+}
+
+// ─── Motif utilities — seams, hems, weave, threads ──────────────────
+// The fabric language: dashed stitch lines, hemmed edges, woven grain.
+
+// Warm woven grain — a faint diagonal weave worked into the dark ground
+.cn-weave {
+  background-color: var(--surface-page);
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      color-mix(in srgb, var(--loam-400) 9%, transparent) 0 1px,
+      transparent 1px 7px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      color-mix(in srgb, var(--loam-400) 9%, transparent) 0 1px,
+      transparent 1px 7px
+    );
+}
+
+// A seam — dashed stitch line. Horizontal by default.
+.cn-seam {
+  border: 0;
+  border-top: var(--bw) dashed var(--seam);
+  height: 0;
+  margin: var(--space-5) 0;
+}
+.cn-seam--v {
+  border-top: 0;
+  border-left: var(--bw) dashed var(--seam);
+  width: 0;
+  height: auto;
+  align-self: stretch;
+  margin: 0 var(--space-5);
+}
+
+// A stitched edge — solid border with an inset dashed seam, like a hem.
+.cn-hem {
+  border: var(--bw) solid var(--border);
+  border-radius: var(--radius-card);
+  position: relative;
+}
+.cn-hem::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: var(--bw-hair) dashed var(--seam);
+  border-radius: calc(var(--radius-card) - 4px);
+  pointer-events: none;
+}
+
+// Thread underline — a hand-drawn-feeling accent under headings/links.
+.cn-thread {
+  background-image: linear-gradient(var(--accent-stitch), var(--accent-stitch));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 100% 2px;
+  padding-bottom: 2px;
+}
+
+// Overline label — small caps, tracked, the brand's section marker.
+.cn-overline {
+  font-family: var(--font-ui);
+  font-weight: var(--w-semibold);
+  font-size: var(--fs-overline);
+  letter-spacing: var(--ls-overline);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+// Logo wordmark helper
+.cn-wordmark {
+  font-family: var(--font-logo);
+  letter-spacing: var(--ls-logo);
+  font-weight: 400;
+  line-height: 1;
+}
+
+// Drop cap, ornamental
+.cn-dropcap::first-letter {
+  font-family: var(--font-ornament);
+  font-size: 3.4em;
+  line-height: 0.8;
+  float: left;
+  margin: 0.05em 0.08em 0 0;
+  color: var(--accent-ember);
+  font-weight: var(--w-black);
+}
