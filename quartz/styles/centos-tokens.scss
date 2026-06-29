@@ -381,6 +381,11 @@
   --container: 1180px;
   --container-narrow: 720px;
   --gutter: clamp(1rem, 4vw, 3rem);
+
+  /* ── Bisected layout (left text column / right graph panel) ──
+     Systematised: change the split or gutter here, not inline. */
+  --right-panel-w: 42vw; /* width of the persistent graph panel */
+  --left-gutter: clamp(2rem, 5vw, 5.5rem); /* left-column inner padding */
 }
 
 // ─── Motif utilities — seams, hems, weave, threads ──────────────────
