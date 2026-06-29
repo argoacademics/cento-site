@@ -187,19 +187,22 @@
   --wheat-300: #e8c87f;
   --wheat-200: #f0dca6;
 
-  /* Rust — burnt sienna (legacy "clay") */
-  --clay-700: #7a2f12;
-  --clay-600: #963c1c;
-  --clay-500: #b04a22;
-  --clay-400: #c66a3f;
-  --clay-300: #d9926a;
+  /* Terracotta — warm amber-brown (legacy "clay").
+     Shifted off red toward burnt amber so it sits with ember/brass. */
+  --clay-700: #7a4a18;
+  --clay-600: #966024;
+  --clay-500: #b0782e;
+  --clay-400: #c6964a;
+  --clay-300: #d9b277;
 
-  /* Oxblood / Wine — the ceremonial stitch (legacy "madder") */
-  --madder-700: #4c121b;
-  --madder-600: #722029;
-  --madder-500: #8f2f39;
-  --madder-400: #ad4d56;
-  --madder-300: #c77f86;
+  /* Wine — the ceremonial stitch (legacy "madder").
+     Deep burgundy/plum, not red — pulled toward the purple-brown end so
+     nothing reads scarlet. */
+  --madder-700: #3d141d;
+  --madder-600: #5a1f2c;
+  --madder-500: #732b3e;
+  --madder-400: #934a5c;
+  --madder-300: #b27f8d;
 
   /* Moss — the living thread (primary brand) */
   --green-900: #13241a;
@@ -218,8 +221,8 @@
   --indigo-500: #3a6f7c;
 
   /* Surfaces (dark) */
-  --paper: #171009; /* page ground (name kept for compat) */
-  --paper-raised: #231811; /* lifted cards */
+  --paper: #20160d; /* page ground — lifted a touch from #171009 */
+  --paper-raised: #2c1f14; /* lifted cards */
   --surface-page: var(--paper);
   --surface-card: var(--paper-raised);
   --surface-sunken: var(--loam-1000);
@@ -267,7 +270,7 @@
   --warn: var(--wheat-400);
   --warn-soft: #392c11;
   --danger: var(--madder-400);
-  --danger-soft: #3a151a;
+  --danger-soft: #2e1620; /* wine wash, not red */
   --info: var(--indigo-500);
   --info-soft: #16303a;
 

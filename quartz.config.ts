@@ -37,26 +37,26 @@ const config: QuartzConfig = {
       // secondary = oxblood stitch (--accent-stitch), tertiary = ember.
       colors: {
         lightMode: {
-          light: "#171009", // paper / soil ground
+          light: "#20160d", // paper / soil ground — lifted
           lightgray: "#33230f", // loam-700 — borders / rules
           gray: "#b4905b", // loam-300 — muted text
           darkgray: "#e3d1b2", // ash-200 — body text
           dark: "#f4e8d3", // ash-100 — strong text / headings
-          secondary: "#8f2f39", // oxblood stitch
+          secondary: "#732b3e", // wine stitch
           tertiary: "#db6a23", // ember
           highlight: "rgba(219, 106, 35, 0.12)", // ember wash
-          textHighlight: "rgba(143, 47, 57, 0.25)", // oxblood wash
+          textHighlight: "rgba(115, 43, 62, 0.25)", // wine wash
         },
         darkMode: {
-          light: "#171009",
+          light: "#20160d",
           lightgray: "#33230f",
           gray: "#b4905b",
           darkgray: "#e3d1b2",
           dark: "#f4e8d3",
-          secondary: "#8f2f39",
+          secondary: "#732b3e",
           tertiary: "#db6a23",
           highlight: "rgba(219, 106, 35, 0.12)",
-          textHighlight: "rgba(143, 47, 57, 0.25)",
+          textHighlight: "rgba(115, 43, 62, 0.25)",
         },
       },
     },

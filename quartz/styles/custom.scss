@@ -72,7 +72,7 @@ body {
   // Page header sits above the article in the left column
   & .page-header {
     margin: 2.5rem 0 0 0 !important;
-    padding: 0 3.5rem !important;
+    padding: 0 5.5rem !important;
     border-bottom: 1px solid var(--lightgray);
     padding-bottom: 1rem !important;
     background: transparent !important;
@@ -82,7 +82,7 @@ body {
 
   // Article content
   & .center {
-    padding: 2rem 3.5rem 2rem !important;
+    padding: 2rem 5.5rem 2rem !important;
     max-width: 100% !important;
     min-width: 0 !important;
     overflow-y: auto;
@@ -95,7 +95,7 @@ body {
   & footer {
     max-width: 100% !important;
     min-width: 0 !important;
-    padding: 1rem 3.5rem !important;
+    padding: 1rem 5.5rem !important;
     border-top: 1px solid var(--lightgray);
     background: transparent !important;
     position: relative;
@@ -410,7 +410,7 @@ footer p {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 1.25rem 3.5rem;
+  padding: 1.25rem 5.5rem;
   border-top: 1px solid var(--lightgray);
   flex-wrap: wrap;
 
@@ -657,6 +657,18 @@ footer p {
   opacity: 0;
   animation: ss-fade-up 0.55s ease both;
   animation-delay: calc(1.8s + var(--li) * 0.3s);
+
+  // Drop cap on the lead line of the cultural explainer — wine,
+  // to distinguish it from the ember drop cap in article bodies.
+  &:first-of-type::first-letter {
+    font-family: var(--font-ornament);
+    font-size: 3em;
+    line-height: 0.8;
+    float: left;
+    margin: 0.04em 0.1em 0 0;
+    color: var(--accent-wine);
+    font-weight: var(--w-black);
+  }
 
   &--closing {
     font-style: italic;
