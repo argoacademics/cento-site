@@ -91,6 +91,15 @@ body {
     z-index: 1;
   }
 
+  // Force every page type to the same full-width measure — the article
+  // and its blocks span the whole left column, no auto-margin squeeze.
+  & .center > article {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
   // Footer in left column
   & footer {
     max-width: 100% !important;
