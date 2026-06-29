@@ -54,7 +54,10 @@ body {
   display: grid !important;
   max-width: 100vw !important;
   min-height: 100vh;
-  grid-template-columns: 1fr var(--right-panel-w) !important;
+  // Both tracks fixed to viewport fractions so the split is content-
+  // independent: the story half can never be widened or narrowed by the
+  // length of its contents (e.g. the stitch sentence).
+  grid-template-columns: calc(100vw - var(--right-panel-w)) var(--right-panel-w) !important;
   grid-template-rows: auto 1fr auto !important;
   column-gap: 0 !important;
   row-gap: 0 !important;
@@ -371,6 +374,24 @@ article {
 // ── Callout blocks ────────────────────────────────────────────
 .callout {
   background-color: color-mix(in srgb, var(--madder-500) 7%, transparent) !important;
+
+  // Detach the callout's width from its content. The stitch sentence is a
+  // single line (it contains an inline link), so the default grid
+  // min-width:auto lets it size to max-content — dictating the column's
+  // measure off the phrase length. Force full width and let the text wrap.
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+
+  & > .callout-content {
+    min-width: 0 !important;
+
+    & p {
+      min-width: 0 !important;
+      overflow-wrap: anywhere;
+    }
+  }
 
   &[data-callout] {
     border-color: var(--accent-stitch) !important;
