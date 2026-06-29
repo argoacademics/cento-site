@@ -20,17 +20,17 @@ const config: QuartzConfig = {
     ignorePatterns: ["private", "templates", ".obsidian"],
     defaultDateType: "modified",
     theme: {
-      fontOrigin: "googleFonts",
+      // All four bespoke CENTOS faces + IBM Plex Mono are self-hosted via
+      // @font-face in quartz/styles/centos-tokens.scss, so use local origin
+      // (no third-party font requests — also cleaner for embedding).
+      fontOrigin: "local",
       cdnCaching: true,
-      // CENTOS "Furnace & Soil" typography.
-      // Substitute Google Fonts stand in for the four bespoke faces until the
-      // real OTF/TTF binaries are self-hosted:
-      //   Zina (logo) → Cinzel · Bonny (display) → Fraunces
-      //   Pardal (body/UI) → Hanken Grotesk · Dirtyline (ornament) → Fraunces
+      // CENTOS "Furnace & Soil" typography:
+      //   Zina (logo) · Bonny (display) · Pardal (body/UI) · Dirtyline (ornament)
       typography: {
-        title: "Cinzel",
-        header: { name: "Fraunces", weights: [400, 600, 900], includeItalic: true },
-        body: { name: "Hanken Grotesk", weights: [300, 400, 500, 600, 700], includeItalic: true },
+        title: "Zina",
+        header: "Bonny",
+        body: "Pardal",
         code: "IBM Plex Mono",
       },
       // CENTOS "Furnace & Soil" palette — dark soil ground lit by furnace heat.
@@ -97,8 +97,11 @@ const config: QuartzConfig = {
       Plugin.Static(),
       Plugin.Favicon(),
       Plugin.NotFoundPage(),
-      // Comment out CustomOgImages to speed up build time
-      Plugin.CustomOgImages(),
+      // CustomOgImages disabled: it renders social cards via Satori by
+      // fetching fonts from Google by name, which fails for the self-hosted
+      // bespoke CENTOS faces (Zina/Bonny/Pardal/Dirtyline aren't on Google).
+      // Re-enable only if OG cards are restyled to use a Google-hosted face.
+      // Plugin.CustomOgImages(),
     ],
   },
 }

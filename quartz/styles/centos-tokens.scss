@@ -1,13 +1,159 @@
 // ════════════════════════════════════════════════════════════════════
 //  CENTOS — Design tokens · "Furnace & Soil"
 //  Ported from the CENTOS Design System (Claude Design 441440fc).
-//  colors / spacing / motif are verbatim; typography is adapted to the
-//  font families this site loads (Google-Font substitutes for the four
-//  bespoke faces until the real OTF/TTF binaries are self-hosted —
-//  Bonny→Fraunces, Pardal→Hanken Grotesk, Zina→Cinzel, Dirtyline→Fraunces).
+//  colors / spacing / motif are verbatim; the four bespoke faces
+//  (Pardal, Bonny, Zina, Dirtyline) are self-hosted below.
 //  These vars sit alongside Quartz's own --secondary/--tertiary/--bodyFont
 //  pipeline (emitted from quartz.config.ts via theme.ts:joinStyles).
 // ════════════════════════════════════════════════════════════════════
+
+// ─── Webfonts — self-hosted under /static/fonts/centos/ ─────────────
+// Pardal: core copy (full weight range). Bonny: swashy folk display
+// (variable). Zina: logo / engraved caps. Dirtyline: ornamental display.
+// IBM Plex Mono: code.
+
+// Pardal (body / UI)
+@font-face {
+  font-family: "Pardal";
+  src: url("/static/fonts/centos/Pardal-Light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pardal";
+  src: url("/static/fonts/centos/Pardal-LightItalic.otf") format("opentype");
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pardal";
+  src: url("/static/fonts/centos/Pardal-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pardal";
+  src: url("/static/fonts/centos/Pardal-Italic.otf") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pardal";
+  src: url("/static/fonts/centos/Pardal-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pardal";
+  src: url("/static/fonts/centos/Pardal-MediumItalic.otf") format("opentype");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pardal";
+  src: url("/static/fonts/centos/Pardal-Semibold.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pardal";
+  src: url("/static/fonts/centos/Pardal-SemiboldItalic.otf") format("opentype");
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pardal";
+  src: url("/static/fonts/centos/Pardal-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pardal";
+  src: url("/static/fonts/centos/Pardal-BoldItalic.otf") format("opentype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pardal";
+  src: url("/static/fonts/centos/Pardal-ExtraBold.otf") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pardal";
+  src: url("/static/fonts/centos/Pardal-ExtraBoldItalic.otf") format("opentype");
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pardal";
+  src: url("/static/fonts/centos/Pardal-Black.otf") format("opentype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pardal";
+  src: url("/static/fonts/centos/Pardal-BlackItalic.otf") format("opentype");
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+// Bonny (swashy folk display, variable)
+@font-face {
+  font-family: "Bonny";
+  src: url("/static/fonts/centos/Bonny-Variable.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+// Zina (logo / engraved caps)
+@font-face {
+  font-family: "Zina";
+  src: url("/static/fonts/centos/Zina-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+// Dirtyline (ornamental display — drop caps)
+@font-face {
+  font-family: "Dirtyline";
+  src: url("/static/fonts/centos/Dirtyline.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+// IBM Plex Mono (code)
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("/static/fonts/centos/IBMPlexMono-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("/static/fonts/centos/IBMPlexMono-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 // ─── Colour · "Furnace & Soil" ──────────────────────────────────────
 :root {
@@ -130,16 +276,14 @@
 }
 
 // ─── Typography ─────────────────────────────────────────────────────
-// Font families resolve to the substitute Google Fonts this site loads.
-// Swap these values to "Pardal" / "Bonny" / "Zina" / "Dirtyline" once the
-// real faces are self-hosted under /static/fonts/centos/.
+// The four bespoke CENTOS faces, self-hosted via @font-face above.
 :root {
-  --font-body: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-ui: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-logo: "Cinzel", serif;
-  --font-display: "Fraunces", Georgia, serif; /* editorial headings */
-  --font-display-warm: "Fraunces", Georgia, serif;
-  --font-ornament: "Fraunces", Georgia, serif; /* drop caps, labels */
+  --font-body: "Pardal", ui-sans-serif, system-ui, sans-serif;
+  --font-ui: "Pardal", ui-sans-serif, system-ui, sans-serif;
+  --font-logo: "Zina", "Bonny", serif;
+  --font-display: "Bonny", Georgia, serif; /* editorial headings */
+  --font-display-warm: "Bonny", Georgia, serif;
+  --font-ornament: "Dirtyline", "Bonny", serif; /* drop caps, labels */
 
   /* Weights */
   --w-light: 300;
