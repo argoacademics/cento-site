@@ -325,6 +325,9 @@ article {
     margin: 0.02em 0.09em 0 0;
     font-weight: var(--w-black);
     color: var(--accent-ember);
+    // Always render the ornamental CAPITAL — Dirtyline's lowercase glyphs are
+    // a different (swashy) form, so force uppercase for a consistent cap.
+    text-transform: uppercase;
   }
 
   .dropcap-explainer {

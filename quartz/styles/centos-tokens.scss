@@ -387,7 +387,7 @@
      The story's own inner gutter is kept tight so the text fills its
      half rather than sitting in a narrow over-padded band. */
   --right-panel-w: 50vw; /* graph panel = exactly half the viewport */
-  --left-gutter: clamp(1.25rem, 2.5vw, 2.75rem); /* tight story padding */
+  --left-gutter: clamp(1rem, 1.5vw, 1.75rem); /* tight story padding */
 }
 
 // ─── Motif utilities — seams, hems, weave, threads ──────────────────
