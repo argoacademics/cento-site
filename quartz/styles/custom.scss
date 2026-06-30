@@ -72,23 +72,20 @@ body {
     display: none !important;
   }
 
-  // Page header sits above the article in the left column — part of the
-  // linen reading leaf, so the title reads as ink on paper too.
+  // Page header sits above the article in the left column
   & .page-header {
-    margin: 0 !important;
-    padding: 2.5rem var(--reading-pad) 1.25rem !important;
-    border-bottom: 1px solid var(--reading-rule);
-    background: var(--reading-surface) !important;
-    border-right: 1px solid var(--reading-surface-edge) !important;
-    box-shadow: 1px 0 0 0 var(--loam-1000) !important;
+    margin: 2.5rem 0 0 0 !important;
+    padding: 0 var(--reading-pad) !important;
+    border-bottom: 1px solid var(--lightgray);
+    padding-bottom: 1rem !important;
+    background: transparent !important;
     position: relative;
     z-index: 1;
   }
 
-  // Article content — the story column is a warm linen reading leaf lifted
-  // off the dark woven ground. Ink-on-paper for legible long-form prose.
+  // Article content
   & .center {
-    padding: 2.5rem var(--reading-pad) 3rem !important;
+    padding: 2rem var(--reading-pad) 2rem !important;
     max-width: 100% !important;
     min-width: 0 !important;
     // Clip horizontally so no descendant (stitch callout, explainer block,
@@ -96,11 +93,7 @@ body {
     // past its allotted half via the default min-width:auto on grid items.
     overflow-x: clip !important;
     overflow-y: auto;
-    background: var(--reading-surface) !important;
-    color: var(--reading-ink) !important;
-    // A stitched seam where the linen leaf meets the dark graph panel.
-    border-right: 1px solid var(--reading-surface-edge) !important;
-    box-shadow: 1px 0 0 0 var(--loam-1000) !important;
+    background: transparent !important;
     position: relative;
     z-index: 1;
   }
@@ -135,16 +128,13 @@ body {
     }
   }
 
-  // Footer in left column — foot of the linen reading leaf.
+  // Footer in left column
   & footer {
     max-width: 100% !important;
     min-width: 0 !important;
-    padding: 1.25rem var(--reading-pad) 2rem !important;
-    border-top: 1px solid var(--reading-rule);
-    background: var(--reading-surface) !important;
-    border-right: 1px solid var(--reading-surface-edge) !important;
-    box-shadow: 1px 0 0 0 var(--loam-1000) !important;
-    color: var(--reading-ink-muted) !important;
+    padding: 1rem var(--reading-pad) !important;
+    border-top: 1px solid var(--lightgray);
+    background: transparent !important;
     position: relative;
     z-index: 1;
   }
@@ -303,7 +293,7 @@ body {
   font-weight: 400 !important;
   letter-spacing: var(--ls-tight) !important;
   line-height: var(--lh-display) !important;
-  color: var(--reading-ink-strong) !important;
+  color: var(--text-strong) !important;
   margin-bottom: 0.5rem !important;
 }
 
@@ -319,7 +309,7 @@ article {
     font-weight: 400;
     letter-spacing: var(--ls-tight);
     line-height: var(--lh-snug);
-    color: var(--reading-ink-strong) !important;
+    color: var(--text-strong) !important;
   }
 
   // Systematic heading sizes (tokenised type scale).
@@ -346,7 +336,7 @@ article {
   blockquote {
     font-family: var(--font-body) !important;
     line-height: var(--lh-relaxed);
-    color: var(--reading-ink) !important;
+    color: var(--text-body) !important;
   }
 
   // Drop caps — deterministic, wrapped at sync time in <span class="dropcap">
@@ -365,10 +355,8 @@ article {
     text-transform: uppercase;
   }
 
-  // On the linen leaf, brass is too pale — use the deeper wine/oxblood so the
-  // explainer cap stays distinct from the ember story cap and holds on cream.
   .dropcap-explainer {
-    color: var(--accent-wine);
+    color: var(--accent-brass);
   }
 
   // Internal links — crimson, no background bubble
@@ -494,8 +482,8 @@ footer p {
   font-size: var(--fs-overline) !important;
   letter-spacing: var(--ls-overline) !important;
   text-transform: uppercase !important;
-  color: var(--reading-ink-muted) !important;
-  opacity: 0.85;
+  color: var(--text-muted) !important;
+  opacity: 0.7;
   margin: 0 !important;
 }
 
@@ -505,7 +493,7 @@ footer p {
   align-items: center;
   gap: 0.75rem;
   padding: 1.25rem var(--reading-pad);
-  border-top: 1px solid var(--reading-rule);
+  border-top: 1px solid var(--lightgray);
   flex-wrap: wrap;
 
   .story-nav-btn {
@@ -516,7 +504,7 @@ footer p {
     text-transform: uppercase;
     color: var(--accent-stitch);
     text-decoration: none !important;
-    border: 1px solid var(--reading-rule);
+    border: 1px solid var(--lightgray);
     padding: 0.28rem 0.8rem;
     border-radius: 2px;
     transition:

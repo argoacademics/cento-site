@@ -231,16 +231,6 @@
   --surface-wine: var(--madder-700);
   --surface-ember: var(--ember-700);
 
-  /* Reading panel — the story column lifts off the dark woven ground onto a
-     warm unbleached-linen leaf, ink-on-paper, for legible long-form prose.
-     The furnace ground, accents, and graph panel stay dark around it. */
-  --reading-surface: #efe6d4; /* unbleached linen */
-  --reading-surface-edge: #e6dac3; /* faint inner shade at the seam */
-  --reading-ink: #2a1f15; /* warm dark ink — body */
-  --reading-ink-strong: #1c130b; /* near-black ink — headings */
-  --reading-ink-muted: #6f5c45; /* captions / faint marks */
-  --reading-rule: color-mix(in srgb, #2a1f15 18%, transparent); /* hairlines on linen */
-
   /* Text (light on dark) */
   --text-strong: var(--ash-100);
   --text-body: var(--ash-200);
