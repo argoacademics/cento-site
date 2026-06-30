@@ -88,6 +88,10 @@ body {
     padding: 2rem var(--left-gutter) 2rem !important;
     max-width: 100% !important;
     min-width: 0 !important;
+    // Clip horizontally so no descendant (stitch callout, explainer block,
+    // a long unbroken token, the drop-cap float) can stretch the grid track
+    // past its allotted half via the default min-width:auto on grid items.
+    overflow-x: clip !important;
     overflow-y: auto;
     background: transparent !important;
     position: relative;
@@ -96,11 +100,21 @@ body {
 
   // Force every page type to the same full-width measure — the article
   // and its blocks span the whole left column, no auto-margin squeeze.
+  // min-width:0 on the article AND its children is what actually stops
+  // intrinsic-width content (the callout, tables, long links) from
+  // dictating the column measure on stitch+explainer stories.
   & .center > article {
     max-width: 100% !important;
     width: 100% !important;
+    min-width: 0 !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
+
+    & > * {
+      min-width: 0 !important;
+      max-width: 100% !important;
+      overflow-wrap: anywhere;
+    }
   }
 
   // Footer in left column
