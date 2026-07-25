@@ -126,6 +126,11 @@ async function main() {
   const records = await fetchRecords(apiKey)
   console.log(`Found ${records.length} verified record(s)`)
 
+  // Records whose Stitch never appears in their Story Body. The StitchPhrase
+  // transformer matches with a literal indexOf, so these render with no link back
+  // to the source — the whole point of the archive — and fail silently.
+  const unstitched = []
+
   for (const record of records) {
     const f = record.fields ?? {}
     const sourceRef = f["Source Reference"]
@@ -134,6 +139,12 @@ async function main() {
     if (!sourceRef || !title) {
       console.warn(`  Skipping ${record.id} — missing Source Reference or Title`)
       continue
+    }
+
+    const stitch = (f["Stitch"] ?? "").trim()
+    const storyBody = f["Story Body"] ?? ""
+    if (stitch && !storyBody.includes(stitch)) {
+      unstitched.push({ title, id: record.id, stitch })
     }
 
     const dir = path.join(CONTENT_DIR, sourceRef)
@@ -145,6 +156,21 @@ async function main() {
 
     fs.writeFileSync(filepath, content, "utf8")
     console.log(`  Wrote ${path.relative(CONTENT_DIR, filepath)}`)
+  }
+
+  if (unstitched.length) {
+    console.warn("")
+    console.warn(
+      `⚠  ${unstitched.length} of ${records.length} record(s) have a Stitch that does not appear`,
+    )
+    console.warn("   verbatim in their Story Body. These pages will render WITHOUT a stitch link:")
+    for (const u of unstitched) {
+      console.warn(`     · ${u.title} (${u.id}) — looking for: "${u.stitch}"`)
+    }
+    console.warn("")
+    console.warn("   Fix in Airtable: the Stitch must be an exact substring of the Story Body")
+    console.warn("   (watch for curly vs straight quotes, and trailing whitespace).")
+    console.warn("")
   }
 
   console.log("Sync complete.")

@@ -32,9 +32,17 @@ Requires the `AIRTABLE_STITCHED_PT` secret (repo Actions secret + local env for 
 ### The one failure mode to watch
 
 `StitchPhrase` matches the stitch with a literal `indexOf`
-(`quartz/plugins/transformers/stitchphrase.ts:48`). If `Stitch` and the copy inside `Story Body`
-differ by even a curly vs straight apostrophe, **the link silently does not render** — no error,
-no warning. Confirm the stitch is a live anchor on any new page before considering it done.
+(`quartz/plugins/transformers/stitchphrase.ts:48`). If `Stitch` does not appear **verbatim inside
+`Story Body`**, the link does not render — the page still builds and still shows the callout, so
+the failure is invisible unless you look for the anchor.
+
+Note the callout occurrence does not count: the transformer deliberately skips text preceded by a
+quotation mark (`stitchphrase.ts:51-54`) so the callout's own quoted copy isn't linked. The phrase
+must also appear, unquoted, in the prose itself.
+
+`scripts/sync-airtable.mjs` now warns at build time for every record where this is true — check the
+CI log after a sync. As of the last audit, **all 8 verified records failed this check**, so no page
+in the archive has ever rendered a stitch link.
 
 ## Two kinds of content
 
