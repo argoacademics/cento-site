@@ -5,6 +5,13 @@ const StoryNav: QuartzComponent = ({ fileData, allFiles }: QuartzComponentProps)
   const currentSlug = fileData.slug as FullSlug
   if (!currentSlug) return <nav class="story-nav"></nav>
 
+  // Standing pages (the shelf, the bank, voices) are not part of the story
+  // sequence — `story_nav: false` in frontmatter opts them out of the
+  // prev/source/next chrome entirely.
+  if ((fileData.frontmatter as Record<string, unknown>)?.story_nav === false) {
+    return <></>
+  }
+
   // Resolve Source link from parent_node frontmatter
   const parentNodeRaw = (fileData.frontmatter as Record<string, unknown>)?.parent_node as
     | string
