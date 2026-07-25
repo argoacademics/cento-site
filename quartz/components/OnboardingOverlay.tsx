@@ -66,11 +66,26 @@ const OnboardingOverlay: QuartzComponent = () => {
 
 OnboardingOverlay.afterDOMLoaded = `
 (function () {
+  var SEEN_KEY = "cento-onboarding-seen";
+
+  // localStorage throws in some private-browsing modes — treat any failure as
+  // "not seen" for reads and as a no-op for writes, so the overlay degrades to
+  // its previous every-visit behaviour rather than breaking the page.
+  function hasSeen() {
+    try { return window.localStorage.getItem(SEEN_KEY) === "1"; } catch (e) { return false; }
+  }
+  function markSeen() {
+    try { window.localStorage.setItem(SEEN_KEY, "1"); } catch (e) { /* ignore */ }
+  }
+
   document.addEventListener("nav", function onNav() {
     document.removeEventListener("nav", onNav);
 
     var overlay = document.getElementById("ss-onboarding-overlay");
     if (!overlay) return;
+
+    // Returning reader: leave it hidden and inert.
+    if (hasSeen()) return;
 
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
@@ -82,6 +97,7 @@ OnboardingOverlay.afterDOMLoaded = `
     var btn = document.getElementById("ss-onboarding-enter");
     if (btn) {
       btn.addEventListener("click", function () {
+        markSeen();
         overlay.classList.add("ss-onboarding-leaving");
         overlay.addEventListener("animationend", function handler(ev) {
           if (ev.animationName !== "ss-overlay-out") return;

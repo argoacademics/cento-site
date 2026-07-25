@@ -29,23 +29,38 @@ const StoryNav: QuartzComponent = ({ fileData, allFiles }: QuartzComponentProps)
     }
   }
 
-  // Sort all content files by date (modified, then created, then slug) for prev/next
+  // Order prev/next by title, falling back to slug — a stable, catalogue-style
+  // sequence (SS-0001 → SS-0002 → …).
+  //
+  // Deliberately NOT sorted by date: Airtable-synced pieces are all written by the
+  // same CI run, so their mtimes are identical-to-arbitrary and the resulting order
+  // shuffles between deploys. Title order is deterministic and survives a re-sync.
+  const orderKey = (f: (typeof allFiles)[number]) =>
+    (((f.frontmatter as Record<string, unknown> | undefined)?.title as string | undefined) ??
+      (f.slug as string) ??
+      "").toLowerCase()
+
   const contentFiles = allFiles
     .filter((f) => f.slug && !(f.slug as string).startsWith("tags/"))
     .sort((a, b) => {
-      const ad = (a as any).dates
-      const bd = (b as any).dates
-      const dateA =
-        ad?.modified?.getTime() ?? ad?.created?.getTime() ?? ad?.published?.getTime() ?? 0
-      const dateB =
-        bd?.modified?.getTime() ?? bd?.created?.getTime() ?? bd?.published?.getTime() ?? 0
-      if (dateA !== dateB) return dateA - dateB
+      const cmp = orderKey(a).localeCompare(orderKey(b), undefined, { numeric: true })
+      if (cmp !== 0) return cmp
       return ((a.slug as string) ?? "").localeCompare((b.slug as string) ?? "")
     })
 
-  const currentIdx = contentFiles.findIndex((f) => f.slug === currentSlug)
+  // Quartz emits two pages per node: the story itself (slug "SS-0001/SS-0001") and a
+  // folder index ("SS-0001/index"). Comparing simplified slugs matches the story page
+  // regardless of which form `fileData.slug` takes; folder indexes and 404 correctly
+  // fall through to -1 and render no arrows.
+  const currentSimple = simplifySlug(currentSlug)
+  const currentIdx = contentFiles.findIndex(
+    (f) => simplifySlug(f.slug as FullSlug) === currentSimple,
+  )
+  // If the current page isn't in the list at all (-1), show neither arrow rather
+  // than silently falling through to the first file.
   const prevFile = currentIdx > 0 ? contentFiles[currentIdx - 1] : null
-  const nextFile = currentIdx < contentFiles.length - 1 ? contentFiles[currentIdx + 1] : null
+  const nextFile =
+    currentIdx >= 0 && currentIdx < contentFiles.length - 1 ? contentFiles[currentIdx + 1] : null
 
   const prevHref = prevFile?.slug
     ? resolveRelative(currentSlug, simplifySlug(prevFile.slug as FullSlug))

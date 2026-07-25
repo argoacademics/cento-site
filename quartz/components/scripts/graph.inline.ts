@@ -631,7 +631,6 @@ function setupControls() {
   const hemBackBtn = document.getElementById("graph-btn-hem-back") as HTMLButtonElement | null
   const hemFwdBtn = document.getElementById("graph-btn-hem-fwd") as HTMLButtonElement | null
   const searchInput = document.getElementById("graph-search-input") as HTMLInputElement | null
-  const filterBtns = document.querySelectorAll<HTMLButtonElement>(".graph-filter-btn")
 
   // Clear search on each navigation
   if (searchInput) searchInput.value = ""
@@ -688,18 +687,10 @@ function setupControls() {
     window.addCleanup(() => hemFwdBtn.removeEventListener("click", handler))
   }
 
-  // Filter buttons
-  filterBtns.forEach((btn) => {
-    const filter = btn.dataset.filter as typeof activeFilter
-    btn.classList.toggle("active", filter === activeFilter)
-    const handler = () => {
-      activeFilter = filter
-      filterBtns.forEach((b) => b.classList.toggle("active", b.dataset.filter === activeFilter))
-      renderPixiFromD3Fn?.()
-    }
-    btn.addEventListener("click", handler)
-    window.addCleanup(() => btn.removeEventListener("click", handler))
-  })
+  // NOTE: there is no `.graph-filter-btn` markup in Graph.tsx, so the wiring that
+  // used to live here was unreachable. `activeFilter` is still live — it selects
+  // which field the search input matches on (see the switch above) and stays on
+  // its "title" default. Re-add the buttons to Graph.tsx before restoring this.
 
   // Search input
   if (searchInput) {
