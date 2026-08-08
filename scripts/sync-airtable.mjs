@@ -136,6 +136,13 @@ async function main() {
   // to the source — the whole point of the archive — and fail silently.
   const unstitched = []
 
+  // Records whose Stitch does not appear in the source node they claim descent
+  // from. The transformer asserts the link without ever opening the parent, so an
+  // unfounded claim would publish looking exactly like a verified one. This does
+  // not block publication — a source node may legitimately hold no text yet — but
+  // it reports every claim the archive cannot currently substantiate.
+  const unsourced = []
+
   for (const record of records) {
     const f = record.fields ?? {}
     const sourceRef = f["Source Reference"]
@@ -155,6 +162,19 @@ async function main() {
       // on the desk, before Status is ever set to Verified.
       unstitched.push({ title, id: record.id, stitch })
       continue
+    }
+
+    // Does the claimed source actually contain the phrase? Reported, not enforced.
+    if (stitch) {
+      const sourceFile = path.join(CONTENT_DIR, sourceRef, `${sourceRef}.md`)
+      if (fs.existsSync(sourceFile)) {
+        const sourceText = fs.readFileSync(sourceFile, "utf8")
+        if (!sourceText.includes(stitch)) {
+          unsourced.push({ title, id: record.id, stitch, sourceRef })
+        }
+      } else {
+        unsourced.push({ title, id: record.id, stitch, sourceRef, missingNode: true })
+      }
     }
 
     const dir = path.join(CONTENT_DIR, sourceRef)
@@ -182,6 +202,22 @@ async function main() {
     console.warn("   Fix in Airtable: the Stitch must be an exact substring of the Story Body")
     console.warn("   (watch for curly vs straight quotes, and trailing whitespace). The")
     console.warn('   "Stitch Check" column shows this verdict per row. Re-approve to republish.')
+    console.warn("")
+  }
+
+  if (unsourced.length) {
+    console.warn("")
+    console.warn(
+      `⚠  UNSUBSTANTIATED — ${unsourced.length} record(s) claim a stitch their source does not contain.`,
+    )
+    console.warn("   These still publish, and their provenance link still renders — but the")
+    console.warn("   archive cannot currently prove the phrase came from where it says:")
+    for (const u of unsourced) {
+      const why = u.missingNode ? "source node has no file" : `not found in ${u.sourceRef}`
+      console.warn(`     · ${u.title} (${u.id}) — "${u.stitch}" — ${why}`)
+    }
+    console.warn("")
+    console.warn("   Either the source node needs its text, or the claim needs correcting.")
     console.warn("")
   }
 
