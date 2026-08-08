@@ -144,7 +144,12 @@ async function main() {
     const stitch = (f["Stitch"] ?? "").trim()
     const storyBody = f["Story Body"] ?? ""
     if (stitch && !storyBody.includes(stitch)) {
+      // Approval in Airtable is what publishes a piece, so a record that would
+      // render without its provenance link must not reach the archive. Skip it
+      // and report; the "Stitch Check" field in Airtable shows the same verdict
+      // on the desk, before Status is ever set to Verified.
       unstitched.push({ title, id: record.id, stitch })
+      continue
     }
 
     const dir = path.join(CONTENT_DIR, sourceRef)
@@ -161,15 +166,17 @@ async function main() {
   if (unstitched.length) {
     console.warn("")
     console.warn(
-      `⚠  ${unstitched.length} of ${records.length} record(s) have a Stitch that does not appear`,
+      `⚠  HELD BACK — ${unstitched.length} of ${records.length} Verified record(s) have a Stitch`,
     )
-    console.warn("   verbatim in their Story Body. These pages will render WITHOUT a stitch link:")
+    console.warn("   that does not appear verbatim in their Story Body. They were NOT published,")
+    console.warn("   because the stitch link is the whole point of the archive:")
     for (const u of unstitched) {
       console.warn(`     · ${u.title} (${u.id}) — looking for: "${u.stitch}"`)
     }
     console.warn("")
     console.warn("   Fix in Airtable: the Stitch must be an exact substring of the Story Body")
-    console.warn("   (watch for curly vs straight quotes, and trailing whitespace).")
+    console.warn("   (watch for curly vs straight quotes, and trailing whitespace). The")
+    console.warn('   "Stitch Check" column shows this verdict per row. Re-approve to republish.')
     console.warn("")
   }
 

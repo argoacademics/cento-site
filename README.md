@@ -1,6 +1,6 @@
 # Cento
 
-A provenance graph for stitched micro-fiction. Each piece carries a phrase — *the stitch* —
+A provenance graph for stitched micro-fiction. Each piece carries a phrase — _the stitch_ —
 extracted from a source text and transplanted into new work. The stitch is rendered as a live
 link back to its origin, so every line of inheritance stays traceable.
 
@@ -11,21 +11,27 @@ A LODESTAR instrument · part of **ARGO Academics**
 
 ## How a piece becomes a page
 
-Content is authored in **Airtable**, not in this repo. On every push to `v4`, CI runs
-`scripts/sync-airtable.mjs`, which pulls records where `Status = "Verified"` and writes them
-into `content/{Source Reference}/{title}-{recordId}.md`.
+Content is authored in **Airtable**, not in this repo. Airtable is the editorial desk:
+submissions arrive there from Tally, are read and edited there, and **approving a record —
+setting `Status` to `Verified` — is what publishes it.** Approval fires a
+`repository_dispatch` at this repo, CI runs `scripts/sync-airtable.mjs`, and the piece goes
+live. See **[docs/publishing-pipeline.md](docs/publishing-pipeline.md)** for the full path and
+the one-off Airtable setup step.
+
+The sync pulls records where `Status = "Verified"` and writes them into
+`content/{Source Reference}/{title}-{recordId}.md`.
 
 Required Airtable fields:
 
-| Field | Role |
-|---|---|
-| `Title` | Page title; slugified into the filename |
-| `Source Reference` | **Load-bearing.** Sets the directory, builds `parent_node`, defines provenance. Must exactly match an existing node folder (e.g. `SS-0003`) |
-| `Stitch` | The inherited phrase. **Must appear verbatim in `Story Body`** |
-| `Story Body` | The fiction. First letter gets a drop cap |
-| `Explainer Body` | Optional "Cultural Explainer" section |
-| `Name` | Written to both `submitter` and `author` |
-| `Affiliation`, `Tags` | Optional metadata |
+| Field                 | Role                                                                                                                                        |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Title`               | Page title; slugified into the filename                                                                                                     |
+| `Source Reference`    | **Load-bearing.** Sets the directory, builds `parent_node`, defines provenance. Must exactly match an existing node folder (e.g. `SS-0003`) |
+| `Stitch`              | The inherited phrase. **Must appear verbatim in `Story Body`**                                                                              |
+| `Story Body`          | The fiction. First letter gets a drop cap                                                                                                   |
+| `Explainer Body`      | Optional "Cultural Explainer" section                                                                                                       |
+| `Name`                | Written to both `submitter` and `author`                                                                                                    |
+| `Affiliation`, `Tags` | Optional metadata                                                                                                                           |
 
 Requires the `AIRTABLE_STITCHED_PT` secret (repo Actions secret + local env for dry runs).
 
@@ -40,9 +46,14 @@ Note the callout occurrence does not count: the transformer deliberately skips t
 quotation mark (`stitchphrase.ts:51-54`) so the callout's own quoted copy isn't linked. The phrase
 must also appear, unquoted, in the prose itself.
 
-`scripts/sync-airtable.mjs` now warns at build time for every record where this is true — check the
-CI log after a sync. As of the last audit, **all 8 verified records failed this check**, so no page
-in the archive has ever rendered a stitch link.
+Two things now catch this. In Airtable, the **Stitch Check** column shows the verdict per row
+(`OK — stitch links` / `NO LINK — stitch not in body`) so it is visible _before_ you approve. In
+CI, `sync-airtable.mjs` **skips** any Verified record that fails and lists it under `HELD BACK` —
+a broken piece is no longer published silently.
+
+Until 2026-08-08 **every record in the base failed this check**, so no page in the archive had
+ever rendered a stitch link. All 9 were corrected in Airtable on that date and now read
+`OK — stitch links`.
 
 ## Two kinds of content
 
@@ -73,8 +84,9 @@ AIRTABLE_STITCHED_PT=… node scripts/sync-airtable.mjs    # pull content first 
 
 ## Deploy
 
-Push to **`v4`** → `.github/workflows/deploy.yml` → Airtable sync → `npx quartz build` →
-GitHub Pages. `v4` is the default branch and the only deploy trigger.
+`.github/workflows/deploy.yml` → Airtable sync → `npx quartz build` → GitHub Pages. Three
+triggers: **Airtable approval** (`repository_dispatch: airtable-verified`, the normal path),
+**Run workflow** in the Actions tab (manual), and a **push to `v4`** (for code changes).
 
 ---
 

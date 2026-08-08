@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - v4
+  # Fired by the Airtable automation "Verified" when a submission is approved.
+  # Airtable is the editorial desk: approving a record is what publishes it.
+  repository_dispatch:
+    types: [airtable-verified]
+  # Manual publish from the Actions tab, for when you want to force a rebuild.
+  workflow_dispatch:
 
 permissions:
   contents: read
