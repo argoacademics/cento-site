@@ -49,34 +49,61 @@ whitespace; capitalisation (`Once Upon a` vs `once upon a` — the match is case
 
 ## Manual setup step (one-off, Airtable UI)
 
-The final hop cannot be created via API — Airtable's outbound-request action must be added
-by hand. The automation **"Verified"** (`wflWDl6APX7ibLqel`) already exists with the correct
-trigger (`Status = Verified`) and no actions. To finish it:
+This is a **one-off setup**, not something you touch per submission. Once it is on, it runs by
+itself on every record that reaches `Status = Verified`.
+
+The final hop cannot be created via API — it must be added by hand. The automation
+**"Verified"** (`wflWDl6APX7ibLqel`) already exists with the correct trigger
+(`Status = Verified`) and no actions. To finish it:
 
 1. Create a GitHub **fine-grained personal access token**
-   - repository access: `argoacademics/cento-site` only
+   at <https://github.com/settings/personal-access-tokens>
+   - repository access: **Only select repositories** → `argoacademics/cento-site`
    - permission: **Contents → Read and write** (this is what `repository_dispatch` requires)
+   - set a long expiry — when it lapses, publishing from Airtable stops (see Token rotation)
    - copy the token; it is shown once
 
-2. In Airtable → Automations → **Verified** → add action → **Send request**
-   - Method: `POST`
-   - URL: `https://api.github.com/repos/argoacademics/cento-site/dispatches`
-   - Headers:
-     | Key | Value |
-     |---|---|
-     | `Accept` | `application/vnd.github+json` |
-     | `Authorization` | `Bearer YOUR_TOKEN_HERE` |
-     | `X-GitHub-Api-Version` | `2022-11-28` |
-     | `Content-Type` | `application/json` |
-   - Body (JSON):
-     ```json
-     { "event_type": "airtable-verified" }
-     ```
+2. In Airtable → **Automations** → **Verified** → **+ Add advanced logic or action** →
+   **Run a script**
 
-3. **Test** the action. A success is HTTP **204 No Content** — GitHub returns an empty body,
-   which Airtable may display as a blank response. That is correct, not a failure.
+   (The action is called **Run a script**, not "Send request". It is available on all plans,
+   including free, and its Variables sidebar supports **secrets** so the token is never stored
+   as plain text.)
 
-4. Turn the automation **on** (it is currently undeployed).
+3. In the script editor's **Variables** sidebar, add a **secret**
+   - name: `githubToken`
+   - value: the token from step 1
+
+4. Paste this as the script:
+
+   ```js
+   // Fire a repository_dispatch at cento-site so the archive rebuilds.
+   // Runs whenever a submission is approved (Status = Verified).
+   const token = input.secret.githubToken
+
+   const res = await fetch("https://api.github.com/repos/argoacademics/cento-site/dispatches", {
+     method: "POST",
+     headers: {
+       Accept: "application/vnd.github+json",
+       Authorization: `Bearer ${token}`,
+       "X-GitHub-Api-Version": "2022-11-28",
+       "Content-Type": "application/json",
+     },
+     body: JSON.stringify({ event_type: "airtable-verified" }),
+   })
+
+   // GitHub answers 204 No Content on success — an empty body is correct, not a failure.
+   if (res.status !== 204) {
+     throw new Error(`GitHub dispatch failed: ${res.status} ${await res.text()}`)
+   }
+   console.log("Dispatched — build starting.")
+   ```
+
+5. Click **Run test**. Success prints `Dispatched — build starting.` A 401 means the token is
+   wrong or expired; a 404 usually means the token lacks **Contents: Read and write** on this
+   repo.
+
+6. Turn the automation **on** (it is currently undeployed).
 
 ### Verifying it works
 
