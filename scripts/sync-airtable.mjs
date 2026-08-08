@@ -73,6 +73,11 @@ function dropCap(body, className) {
 
 function buildMarkdown(record) {
   // Airtable REST API returns fields by name under record.fields
+  //
+  // NOTE: `Email` is deliberately NOT read here. This repo and the built site are
+  // public, and contributors may be under 18 — publishing an address would be
+  // permanent and irreversible. Do not add it to the frontmatter or any index page
+  // without a consent position that covers it.
   const f = record.fields ?? {}
 
   const title = f["Title"] ?? record.id

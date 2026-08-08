@@ -10,6 +10,12 @@ on:
     types: [airtable-verified]
   # Manual publish from the Actions tab, for when you want to force a rebuild.
   workflow_dispatch:
+  # Poll Airtable every 30 minutes so approving a record is the only step needed.
+  # Actions minutes are free and unlimited on public repos, so the idle runs cost
+  # nothing. This exists because Airtable's script action (which would let approval
+  # fire the build instantly) is paid-plan only — see docs/publishing-pipeline.md.
+  schedule:
+    - cron: "*/30 * * * *"
 
 permissions:
   contents: read
