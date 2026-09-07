@@ -56,8 +56,9 @@ stitch, owning a corpus — must be checked server-side by the service that owns
 the data, against LODESTAR's JWKS. Treat the cookie as attacker-controlled; the
 email is HTML-escaped before it is rendered for exactly that reason.
 
-Build-time configuration (GitHub repo **variables**, not secrets — both values
-are public):
+Build-time configuration, set as env vars on the **Vercel** project `cento-site`
+(Production + Preview). Both values are public — an app origin, and a project
+ref already visible in any signed-in browser's cookie name:
 
     LODESTAR_APP_URL       https://app.lodestar.ink
     LODESTAR_SUPABASE_REF  <ref in LODESTAR's sb-<ref>-auth-token cookie>
@@ -70,24 +71,24 @@ today. Auth is additive: it never gates reading the archive.
 Code is done; these are infrastructure steps.
 
 1. **DNS.** Point `app.lodestar.ink` at the `lodestar-app` Vercel project and
-   `cento.lodestar.ink` at this site's GitHub Pages. Add both as custom domains
-   in their respective hosts.
+   `cento.lodestar.ink` at this site's Vercel project (`cento-site`). Add both
+   as custom domains in Vercel.
 2. **LODESTAR env** (Vercel, `lodestar-app`):
    `NEXT_PUBLIC_LODESTAR_COOKIE_DOMAIN=.lodestar.ink` (note the leading dot) and
    `NEXT_PUBLIC_LODESTAR_ROOT_DOMAIN=lodestar.ink`.
 3. **Supabase Auth** — add `https://app.lodestar.ink/auth/callback` to the
    allowed redirect URLs.
-4. **CENTO repo variables** — set `LODESTAR_APP_URL` and
-   `LODESTAR_SUPABASE_REF` (Settings → Secrets and variables → Actions →
-   Variables), then re-run the deploy workflow.
+4. **CENTO env** — `LODESTAR_APP_URL` and `LODESTAR_SUPABASE_REF` are already
+   set on the `cento-site` Vercel project (Production + Preview). Redeploy to
+   pick them up.
 5. **Verify.** Sign in at `app.lodestar.ink`, then load `cento.lodestar.ink`:
    the chip should show your email. In devtools the cookie's Domain column must
    read `.lodestar.ink`. If it reads `app.lodestar.ink`, step 2 did not take —
    that is the silent failure this whole page is about.
 
-Until step 1 lands, CENTO is still served from
-`stitchedstories.argoacademics.com.au`, which is not beneath `lodestar.ink`, so
-the cookie cannot reach it. The chip stays hidden and nothing breaks.
+Until step 1 lands, CENTO is still served from its old host, which is not
+beneath `lodestar.ink`, so the cookie cannot reach it. The chip stays hidden and
+nothing breaks.
 
 ## What this deliberately does not do
 

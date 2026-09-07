@@ -4,7 +4,7 @@ A provenance graph for stitched micro-fiction. Each piece carries a phrase — _
 extracted from a source text and transplanted into new work. The stitch is rendered as a live
 link back to its origin, so every line of inheritance stays traceable.
 
-**Live:** https://stitchedstories.argoacademics.com.au/
+**Live:** https://cento.lodestar.ink/
 A LODESTAR instrument · part of **ARGO Academics**
 
 ---
@@ -84,9 +84,12 @@ AIRTABLE_STITCHED_PT=… node scripts/sync-airtable.mjs    # pull content first 
 
 ## Deploy
 
-`.github/workflows/deploy.yml` → Airtable sync → `npx quartz build` → GitHub Pages. Three
-triggers: **Airtable approval** (`repository_dispatch: airtable-verified`, the normal path),
-**Run workflow** in the Actions tab (manual), and a **push to `v4`** (for code changes).
+Built and served by **Vercel**: `npm run build` = Airtable sync → `npx quartz build`,
+output in `public/`. A push to `v4` deploys through Vercel's git integration.
+
+**Airtable approval** publishes immediately: the automation fires
+`repository_dispatch: airtable-verified`, and `.github/workflows/deploy.yml` forwards it
+to a Vercel Deploy Hook. See [docs/vercel-migration.md](docs/vercel-migration.md).
 
 ---
 
