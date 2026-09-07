@@ -44,6 +44,14 @@ jobs:
           AIRTABLE_STITCHED_PT: ${{ secrets.AIRTABLE_STITCHED_PT }}
       - name: Build Quartz
         run: npx quartz build
+        env:
+          # LODESTAR account bridge. Both are PUBLIC values (an app origin and a
+          # Supabase project ref), so they are repo variables, not secrets — the
+          # ref is already visible in any signed-in browser's cookie name.
+          # Unset, the account chip simply does not render and CENTO stays
+          # anonymous; auth is additive and never gates reading the archive.
+          LODESTAR_APP_URL: ${{ vars.LODESTAR_APP_URL }}
+          LODESTAR_SUPABASE_REF: ${{ vars.LODESTAR_SUPABASE_REF }}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

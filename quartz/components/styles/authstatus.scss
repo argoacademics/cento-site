@@ -1,0 +1,46 @@
+// LODESTAR account chip. Quiet by design — the archive is the subject, the
+// account is an affordance. Renders nothing until the inline script fills it,
+// so signed-out readers never see a flash of the wrong state.
+.auth-status {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-size: 0.8rem;
+  opacity: 0.7;
+
+  &:empty {
+    display: none;
+  }
+
+  .auth-status-who {
+    color: var(--gray);
+    // Long emails must not push the header around.
+    max-width: 18ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .auth-status-form {
+    display: inline;
+    margin: 0;
+  }
+
+  // The sign-out control is a <button> for CSRF reasons (it posts a form), so
+  // it needs the browser's button chrome stripped to sit beside a link.
+  .auth-status-link {
+    color: var(--gray);
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--secondary);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+  }
+}
