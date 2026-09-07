@@ -66,6 +66,33 @@ ref already visible in any signed-in browser's cookie name:
 Unset, the chip does not render at all and CENTO builds exactly as it does
 today. Auth is additive: it never gates reading the archive.
 
+## The standing rule: encouraged, never required
+
+Decided 2026-09-07, extending LODESTAR's DECISIONS.md #1 ("anonymous-first,
+optional free account") to CENTO.
+
+**Stress access; leave it optional.** The chip names what an account is *for* —
+"Sign in to keep your work" — rather than offering a bare "Sign in", because an
+account earns nothing if nobody can tell what it does. But the archive reads
+identically signed out, and that must stay true.
+
+What this rules out, concretely:
+
+- No modal, interstitial, or dismissable banner asking anyone to sign in.
+- No "sign in to continue reading", no partial text, no counted free articles.
+- No gate on submitting. A stranger can still contribute; the account is for
+  *keeping* the work, not for permission to make it.
+- Nothing in the reading path may depend on a session. If the auth service is
+  down, or the cookie is absent, or the account system is removed entirely, the
+  archive is unchanged.
+
+What an account gets, once corpora move to Postgres: your submissions attached
+to you, your drafts visible only to you, ownership of a corpus you branch, and
+the same identity across Cento, Elide and nthrhyme. All additive.
+
+The test for any future change: **if a signed-out reader sees less of the
+archive than a signed-in one, the change is wrong.**
+
 ## Cutover checklist
 
 Code is done; these are infrastructure steps.

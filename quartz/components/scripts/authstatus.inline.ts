@@ -27,8 +27,15 @@ function render() {
   const here = window.location.href
 
   if (!claims) {
+    // Names what an account is FOR rather than just offering one. The archive
+    // reads identically signed out — an account carries your work across the
+    // instruments, it does not unlock the reading. Keep this an offer, never a
+    // wall: no modal, no dismissable banner, no interstitial.
     const login = `${appUrl}/login?next=${encodeURIComponent(here)}`
-    el.innerHTML = `<a class="auth-status-link" href="${login}">Sign in</a>`
+    el.innerHTML =
+      `<a class="auth-status-link" href="${login}" ` +
+      `title="One account across Cento, Elide and nthrhyme. ` +
+      `Reading never requires it.">Sign in to keep your work</a>`
     return
   }
 
