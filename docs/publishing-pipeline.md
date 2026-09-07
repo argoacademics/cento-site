@@ -3,6 +3,13 @@
 Airtable is the editorial desk. A submission is _considered_ there, edited there, and
 approved there — and approving it is what publishes it. Nothing else is a publish button.
 
+> **Moved to Vercel.** CENTO is built and served by Vercel, not GitHub Pages. The
+> 30-minute polling cron is gone: approval now publishes immediately via a Deploy
+> Hook instead of waiting for the next poll. Sections below that describe Pages,
+> the cron, or a GitHub PAT are superseded by
+> [vercel-migration.md](vercel-migration.md) — the Airtable half (base, table,
+> automation, the Run-a-script action) is unchanged and still accurate.
+
 ```
 Tally "Stitched Stories Submissions" (WOe7pN)
         │  raw intake, no validation
@@ -13,20 +20,24 @@ Airtable  base appI3b2eKqgY9XWuQ · table tblpfCliNwnlmUt8Y
         ▼
 Airtable automation "Verified"  ──POST repository_dispatch──►  GitHub
         ▼
-.github/workflows/deploy.yml  →  scripts/sync-airtable.mjs  →  npx quartz build
+.github/workflows/deploy.yml  ──POST Vercel Deploy Hook──►  Vercel
         ▼
-GitHub Pages · https://stitchedstories.argoacademics.com.au/
+Vercel  npm run build  =  scripts/sync-airtable.mjs  →  npx quartz build
+        ▼
+https://cento.lodestar.ink/
 ```
 
 No Zapier anywhere in this path.
 
-## The three triggers on deploy.yml
+## The two triggers on deploy.yml
 
-| Trigger                                     | Fires when             | Use                  |
-| ------------------------------------------- | ---------------------- | -------------------- |
-| `repository_dispatch` (`airtable-verified`) | Airtable approval      | the normal path      |
-| `workflow_dispatch`                         | you click Run workflow | force a rebuild      |
-| `push` to `v4`                              | code changes           | design/template work |
+A push to `v4` no longer runs this workflow — Vercel's own git integration picks
+that up directly.
+
+| Trigger                                     | Fires when             | Use             |
+| ------------------------------------------- | ---------------------- | --------------- |
+| `repository_dispatch` (`airtable-verified`) | Airtable approval      | the normal path |
+| `workflow_dispatch`                         | you click Run workflow | force a rebuild |
 
 ## Before approving: check the stitch
 

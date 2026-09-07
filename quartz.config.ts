@@ -16,7 +16,14 @@ const config: QuartzConfig = {
       provider: "plausible",
     },
     locale: "en-US",
-    baseUrl: "stitchedstories.argoacademics.com.au",
+    // Overridable so the domain is not hardcoded through the move to
+    // cento.lodestar.ink. On a Vercel preview, VERCEL_URL is the deploy's own
+    // host, which keeps absolute links (RSS, OG tags, sitemap) pointing at the
+    // preview instead of production.
+    baseUrl:
+      process.env.CENTO_BASE_URL ??
+      process.env.VERCEL_URL ??
+      "stitchedstories.argoacademics.com.au",
     ignorePatterns: ["private", "templates", ".obsidian"],
     defaultDateType: "modified",
     theme: {
