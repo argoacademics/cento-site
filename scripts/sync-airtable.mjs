@@ -123,6 +123,17 @@ function buildMarkdown(record) {
 async function main() {
   const apiKey = process.env.AIRTABLE_STITCHED_PT
   if (!apiKey) {
+    // A production build without the token is a broken publish and must fail
+    // loudly. A PREVIEW build without it is normal — Vercel preview deploys do
+    // not get production env, and a PR should still build so it can be looked
+    // at. In that case skip the sync and build whatever is committed.
+    if (process.env.VERCEL_ENV && process.env.VERCEL_ENV !== "production") {
+      console.warn(
+        `AIRTABLE_STITCHED_PT is not set; skipping Airtable sync on this ` +
+          `${process.env.VERCEL_ENV} build. Content will be whatever is committed.`,
+      )
+      return
+    }
     console.error("AIRTABLE_STITCHED_PT is not set")
     process.exit(1)
   }

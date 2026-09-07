@@ -1,94 +1,53 @@
-# Cento
+# Cento — archived
 
-A provenance graph for stitched micro-fiction. Each piece carries a phrase — _the stitch_ —
-extracted from a source text and transplanted into new work. The stitch is rendered as a live
-link back to its origin, so every line of inheritance stays traceable.
+**CENTO has moved into LODESTAR.** This repository is no longer the site.
 
-**Live:** https://stitchedstories.argoacademics.com.au/
-A LODESTAR instrument · part of **ARGO Academics**
+- **Read:** https://cento.lodestar.ink
+- **Write and review:** https://app.lodestar.ink/cento
+- **Code:** `argoacademics/lodestar-app`
 
----
+Nothing was ported across. The nine Airtable records were test submissions
+against synthetic specimen sources — placeholder content written to prove the
+mechanism — so the new archive starts empty and the first real corpus is
+authored in it.
 
-## How a piece becomes a page
+## Why it moved
 
-Content is authored in **Airtable**, not in this repo. Airtable is the editorial desk:
-submissions arrive there from Tally, are read and edited there, and **approving a record —
-setting `Status` to `Verified` — is what publishes it.** Approval fires a
-`repository_dispatch` at this repo, CI runs `scripts/sync-airtable.mjs`, and the piece goes
-live. See **[docs/publishing-pipeline.md](docs/publishing-pipeline.md)** for the full path and
-the one-off Airtable setup step.
+Quartz is a static-site generator for Obsidian vaults: a folder of markdown
+becomes a browsable, backlinked site. That was an honest fit while CENTO *was*
+a folder of markdown, and the graph view came free.
 
-The sync pulls records where `Status = "Verified"` and writes them into
-`content/{Source Reference}/{title}-{recordId}.md`.
+Three things justified it. By September 2026 two were gone:
 
-Required Airtable fields:
+| Quartz gave us | Then |
+| --- | --- |
+| Markdown → static site | Content moved to Postgres; files stopped being the source |
+| Backlinks and a graph view | Still useful — rebuilt from data instead of wikilinks |
+| Free GitHub Pages hosting | Replaced by Vercel |
 
-| Field                 | Role                                                                                                                                        |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Title`               | Page title; slugified into the filename                                                                                                     |
-| `Source Reference`    | **Load-bearing.** Sets the directory, builds `parent_node`, defines provenance. Must exactly match an existing node folder (e.g. `SS-0003`) |
-| `Stitch`              | The inherited phrase. **Must appear verbatim in `Story Body`**                                                                              |
-| `Story Body`          | The fiction. First letter gets a drop cap                                                                                                   |
-| `Explainer Body`      | Optional "Cultural Explainer" section                                                                                                       |
-| `Name`                | Written to both `submitter` and `author`                                                                                                    |
-| `Affiliation`, `Tags` | Optional metadata                                                                                                                           |
+The deciding reason was structural rather than aesthetic. Under Quartz,
+**provenance resolved at build time inside one content tree** — a literal
+`indexOf` over committed markdown. That made a corpus a *repository*, so a
+second corpus meant a second repo, a second Airtable base and a second deploy.
+Branching was impossible by construction, and letting anyone start their own
+corpus was the point.
 
-Requires the `AIRTABLE_STITCHED_PT` secret (repo Actions secret + local env for dry runs).
+In LODESTAR a corpus is a row. A hundred corpora cost nothing, descent is a
+foreign key, and the stitch check is a database constraint rather than a
+build-time warning — which is what finally closed the failure this archive
+carried for months: a piece could claim a phrase its source never contained,
+publish anyway, and link to nothing.
 
-### The one failure mode to watch
+## What is preserved here
 
-`StitchPhrase` matches the stitch with a literal `indexOf`
-(`quartz/plugins/transformers/stitchphrase.ts:48`). If `Stitch` does not appear **verbatim inside
-`Story Body`**, the link does not render — the page still builds and still shows the callout, so
-the failure is invisible unless you look for the anchor.
+The full history, including every version of the Quartz build, the Airtable
+sync, and the specimen source texts. Nothing has been deleted — the working
+tree still holds it, and `git log` reaches all of it.
 
-Note the callout occurrence does not count: the transformer deliberately skips text preceded by a
-quotation mark (`stitchphrase.ts:51-54`) so the callout's own quoted copy isn't linked. The phrase
-must also appear, unquoted, in the prose itself.
+Two pieces of design worth knowing were carried forward rather than abandoned:
 
-Two things now catch this. In Airtable, the **Stitch Check** column shows the verdict per row
-(`OK — stitch links` / `NO LINK — stitch not in body`) so it is visible _before_ you approve. In
-CI, `sync-airtable.mjs` **skips** any Verified record that fails and lists it under `HELD BACK` —
-a broken piece is no longer published silently.
-
-Until 2026-08-08 **every record in the base failed this check**, so no page in the archive had
-ever rendered a stitch link. All 9 were corrected in Airtable on that date and now read
-`OK — stitch links`.
-
-## Two kinds of content
-
-Hand-authored nodes (`content/SS-0001/SS-0001.md` and siblings) are committed scaffolding: three
-frontmatter keys, no stitch link, no drop cap. Airtable-synced pieces get the full eight keys and
-all rendering features. The `-{recordId}` filename suffix means the sync can never overwrite a
-hand-authored node, so the two coexist safely.
-
-## Custom surface
-
-Everything under `quartz/` is vendored upstream except:
-
-- `quartz/plugins/transformers/stitchphrase.ts` — wraps the stitch phrase in a link to its parent
-- `quartz/components/StoryNav.tsx` — prev / source / next bar
-- `quartz/components/OnboardingOverlay.tsx` — first-visit framing
-- `quartz/components/HomeButton.tsx` — masthead
-- `quartz/components/Graph.tsx` + `quartz/components/scripts/graph.inline.ts` — the "hem" walk
-- `quartz/styles/custom.scss`, `quartz/styles/centos-tokens.scss` — "Furnace & Soil" design system
-- `scripts/sync-airtable.mjs`, `quartz.config.ts`, `quartz.layout.ts`
-
-## Run locally
-
-```bash
-npm ci
-npx quartz build --serve                                 # http://localhost:8080
-AIRTABLE_STITCHED_PT=… node scripts/sync-airtable.mjs    # pull content first (optional)
-```
-
-## Deploy
-
-`.github/workflows/deploy.yml` → Airtable sync → `npx quartz build` → GitHub Pages. Three
-triggers: **Airtable approval** (`repository_dispatch: airtable-verified`, the normal path),
-**Run workflow** in the Actions tab (manual), and a **push to `v4`** (for code changes).
-
----
-
-Built on [Quartz v4](https://quartz.jzhao.xyz/) by Jacky Zhao (MIT). Upstream `package.json`
-metadata is intentionally left unchanged to preserve attribution.
+- `quartz/plugins/transformers/stitchphrase.ts` → `src/lib/corpora/stitch.tsx`
+  in lodestar-app, including its rule of skipping a quoted occurrence so the
+  callout does not link to itself.
+- `docs/publishing-pipeline.md` records the Airtable editorial desk as it
+  worked, which is the design the dashboard's review queue replaces.

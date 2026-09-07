@@ -26,6 +26,7 @@ import ConditionalRender from "./ConditionalRender"
 import HomeButton from "./HomeButton"
 import OnboardingOverlay from "./OnboardingOverlay"
 import StoryNav from "./StoryNav"
+import AuthStatus from "./AuthStatus"
 
 export {
   ArticleTitle,
@@ -56,4 +57,5 @@ export {
   HomeButton,
   OnboardingOverlay,
   StoryNav,
+  AuthStatus,
 }

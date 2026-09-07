@@ -1,9 +1,23 @@
 import { PageLayout, SharedLayout } from "./quartz/cfg"
 import * as Component from "./quartz/components"
 
+// LODESTAR account bridge. Both must be set at BUILD time (GitHub Actions env)
+// for the account chip to appear; unset, CENTO builds exactly as before and
+// stays fully anonymous. Auth is additive — it never gates reading the archive.
+//   LODESTAR_APP_URL      e.g. https://app.lodestar.ink
+//   LODESTAR_SUPABASE_REF the <ref> in LODESTAR's sb-<ref>-auth-token cookie
+const lodestarAppUrl = process.env.LODESTAR_APP_URL ?? ""
+const lodestarSupabaseRef = process.env.LODESTAR_SUPABASE_REF ?? ""
+
 export const sharedPageComponents: SharedLayout = {
   head: Component.Head(),
-  header: [Component.HomeButton()],
+  header: [
+    Component.HomeButton(),
+    Component.AuthStatus({
+      lodestarAppUrl,
+      supabaseRef: lodestarSupabaseRef,
+    }),
+  ],
   afterBody: [Component.OnboardingOverlay(), Component.StoryNav()],
   footer: Component.Footer(),
 }
